@@ -12,3 +12,8 @@
 
 ## 2. Features of Algobase
 
+## 3. Project Structure + Stacks
+
+## 4. Build Instructions
+
+## 5. Improvements
