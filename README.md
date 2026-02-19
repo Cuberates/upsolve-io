@@ -12,13 +12,13 @@
 - *However, the features of this application can also be used for storing knowledge in just about any discipline. Whether it is for studying the features of, say, CLI tools, or memorizing the low-level features of C++20, the same study methods can be applied.*
 
 ## 2. Features of Algobase
-### 2.1. Card Creation
+### 2.1. [F1] Creative Mode
 - Users can **create cards**, each containing:
   - A **problem statement** (description of a coding challenge) written in Markdown. 
   - A **designated code editor** with syntax highlighting for implementation
 - Each card is assigned a **difficulty level** (e.g., *Easy*, *Medium*, *Hard*)
 
-### 2.2. Study Mode
+### 2.2. [F2] Study Mode
 - Users can **study** a collection of cards.
 - The platform:
   - Displays a **stored problem statement** with an **empty code editor**.
