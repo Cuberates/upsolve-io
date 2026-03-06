@@ -1,6 +1,7 @@
 package com.example.cmpt276.upsolve.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -14,17 +15,25 @@ public class User {
   Integer userID;
   String userName; 
   String userPassword;
+  String userRole; 
 
   public User() {}
   public User(String userName, String userPassword) {
     this.userName = userName;
     this.userPassword = userPassword; 
+    this.userRole = "USER"; 
   }
   public Integer getUserID() {
     return userID;
   }
   public void setUserID(Integer userID) {
     this.userID = userID;
+  }
+  public void setUserRole(String userRole) {
+    this.userRole = userRole;
+  }
+  public String getUserRole() {
+    return userRole;
   }
   public String getUserName() {
     return userName;

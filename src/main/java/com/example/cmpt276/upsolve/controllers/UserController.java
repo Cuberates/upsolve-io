@@ -1,5 +1,6 @@
 package com.example.cmpt276.upsolve.controllers;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,11 @@ public class UserController {
     System.out.println("Username: " + userName);
     System.out.println("Password: " + userPassword);
 
-    if (userRepository.findByUserNameAndUserPassword(userName, userPassword).size() == 0) {
-      return "Invalid username or password";
+    List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword);
+    User user = users.size() > 0 ? users.get(0) : null;
+
+    if (user != null && "ADMIN".equals(user.getUserRole())) {
+      return "admin_dashboard";
     }
     return "dashboard";
   }
