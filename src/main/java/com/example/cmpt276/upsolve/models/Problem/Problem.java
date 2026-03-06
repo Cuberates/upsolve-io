@@ -1,16 +1,10 @@
-package com.example.cmpt276.upsolve.models;
+package com.example.cmpt276.upsolve.models.Problem;
 
 import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
-/*TODO: 
-- Design complete UML class for the problem attributes. []  
-- Design the database schema for the problem attributes. []
-- Design the REST API endpoints for the problem attributes. []
-*/
 
 @Entity
 @Table(name = "problems")
