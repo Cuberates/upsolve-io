@@ -1,9 +1,16 @@
-package com.example.cmpt276.upsolve.models.User;
+package com.example.cmpt276.upsolve.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+
+@Table(name="users")
+@Entity
 public class User {
   @Id 
+  @GeneratedValue
   Integer userID;
   String userName; 
   String userPassword;

@@ -3,30 +3,32 @@ package com.example.cmpt276.upsolve.controllers;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.cmpt276.upsolve.models.User.User;
-import com.example.cmpt276.upsolve.models.User.UserRepository;
+import com.example.cmpt276.upsolve.models.User;
+import com.example.cmpt276.upsolve.models.UserRepository;
 
-import jakarta.persistence.Table;
-
-@Table(name = "users")
+@Controller
 public class UserController {
   @Autowired
   private UserRepository userRepository;
 
-  @GetMapping("/users/login")
+  @PostMapping("/login")
   public String loginUser(@RequestParam Map<String, String> loginInfo) {
     String userName = loginInfo.get("userName");
     String userPassword = loginInfo.get("userPassword");
-    if (userRepository.findByUserNameAndPassword(userName, userPassword).isEmpty()) {
+
+    System.out.println("Username: " + userName);
+    System.out.println("Password: " + userPassword);
+
+    if (userRepository.findByUserNameAndUserPassword(userName, userPassword).size() == 0) {
       return "Invalid username or password";
     }
     return "dashboard";
   }
-  @PostMapping("/users/register")
+  @PostMapping("/register")
   public String registerUser(@RequestParam Map<String, String> registrationInfo) {
     String userName = registrationInfo.get("userName");
     String userPassword = registrationInfo.get("userPassword");
