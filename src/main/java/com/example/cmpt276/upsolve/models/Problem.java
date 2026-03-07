@@ -1,0 +1,57 @@
+package com.example.cmpt276.upsolve.models;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Table(name="problems")
+@Entity
+public class Problem {
+    @Id 
+    @GeneratedValue
+    Integer problemID;
+    String problemName; 
+    String problemDescription;
+    String problemSolution;
+    int problemDifficulty;
+    
+    public Problem() {}
+    public Problem(String problemName, String problemDescription, String problemSolution, int problemDifficulty) {
+        this.problemName = problemName;
+        this.problemDescription = problemDescription;
+        this.problemSolution = problemSolution;
+        this.problemDifficulty = problemDifficulty;
+    }
+    public Integer getProblemID() {
+        return problemID;
+    }
+    public void setProblemID(Integer problemID) {
+        this.problemID = problemID;
+    }
+    public String getProblemName() {
+        return problemName;
+    }
+    public void setProblemName(String problemName) {
+        this.problemName = problemName;
+    }
+    public String getProblemDescription() {
+        return problemDescription;
+    }
+    public void setProblemDescription(String problemDescription) {
+        this.problemDescription = problemDescription;
+    }
+    public String getProblemSolution() {
+        return problemSolution;
+    }
+    public void setProblemSolution(String problemSolution) {
+        this.problemSolution = problemSolution;
+    }
+    public int getProblemDifficulty() {
+        return problemDifficulty;
+    }
+    public void setProblemDifficulty(int problemDifficulty) {
+        this.problemDifficulty = problemDifficulty;
+    }
+    
+}
