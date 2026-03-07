@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create New Card</title>
+</head>
+<body>
+  <h1>Create New Card</h1>
+  <form action="/create_card" method="post">
+    <label for="problemName">Problem name:</label>
+    <input type="text" id="problemName" name="problemName" required><br><br>
+    <label for="problemDescription">Problem Description:</label>
+    <input type="text" id="problemDescription" name="problemDescription" required><br><br>
+    <label for="problemSolution">Problem Solution:</label>
+    <input type="text" id="problemSolution" name="problemSolution" notrequired><br><br>
+    <label for="problemDifficulty">Problem Difficulty:</label>
+    <input type="integer" id="problemDifficulty" name="problemDifficulty" required><br><br>
+    <input type="submit" value="Create">
+  </form>
+</body>
+
+
+</html>
