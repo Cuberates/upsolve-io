@@ -1,18 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head> 
   <meta charset="UTF-8"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>Upsolve - Login</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script defer th:src="@{/js/app.js}"></script>
 </head>
 <body>
-  <h1>Login</h1>
-  <form action="/login" method="post">
-    <label for="userName">Username:</label>
-    <input type="text" id="userName" name="userName" required><br><br>
-    <label for="userPassword">Password:</label>
-    <input type="password" id="userPassword" name="userPassword" required><br><br>
-    <input type="submit" value="Login">
-  </form>
+  <div class="page-shell">
+    <div class="brand">Upsolve</div>
+
+    <div class="content">
+      <section class="auth-card">
+        <p class="welcome">Welcome !</p>
+        <h1 class="title">Sign in</h1>
+
+        <form th:action="@{/login}" action="/login" method="post">
+          <div class="field">
+            <label for="userName">Username</label>
+            <div class="input-wrap">
+              <input
+                type="text"
+                id="userName"
+                name="userName"
+                placeholder="Enter your email"
+                autocomplete="username"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="userPassword">Password</label>
+            <div class="input-wrap">
+              <input
+                type="password"
+                id="userPassword"
+                name="userPassword"
+                placeholder="Enter your Password"
+                autocomplete="current-password"
+                required
+              >
+              <button class="password-toggle" type="button" aria-label="Show or hide password" onclick="togglePassword('userPassword', this)">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M3 3L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M10.58 10.58C10.21 10.95 10 11.46 10 12C10 13.1 10.9 14 12 14C12.54 14 13.05 13.79 13.42 13.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M9.88 5.09C10.56 4.86 11.27 4.75 12 4.75C17 4.75 20.27 9.11 21 12C20.73 13.07 20.08 14.3 19.1 15.42M14.12 18.91C13.44 19.14 12.73 19.25 12 19.25C7 19.25 3.73 14.89 3 12C3.37 10.54 4.36 8.83 5.88 7.46" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="adminLogin" name="adminLogin">
+            <label for="adminLogin">Admin Login</label>
+          </div>
+
+          <button type="submit" class="submit-btn">Login</button>
+
+          <div class="helper-links">
+            Don’t have an account?
+            <a th:href="@{/register}" href="/register">Register</a>
+          </div>
+        </form>
+      </section>
+
+      <aside class="art-panel" aria-hidden="true">
+        <img th:src="@{/img/login.png}" src="login.png" alt="">
+      </aside>
+    </div>
+  </div>
 </body>
 </html>
