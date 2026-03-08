@@ -1,11 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UpSolve - Admin Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
 </head>
 <body>
-  <h1>Welcome! You are an admin! </h1>
-  <a href="/logout">Logout</a>
+
+    <!--  navbar  -->
+    <nav id="main-navbar">
+        <div id="navbar-container">
+
+            <a id="navbar-brand" href="/admin_dashboard">UpSolve</a>
+
+            <div id="navbar-right">
+                <a id="nav-btn-create" href="/create_card">
+                    <i class="bi bi-plus-lg"></i> Create Flash Card
+                </a>
+
+                <div id="account-logo">
+                    <img th:src="@{/img/account_circle.svg}" id="account-icon" width="39" height="36" alt="Account"/>
+                    <div id="account-dropdown">
+                        <div id="dropdown-username">
+                            <span th:text="${user.userName}">username</span>
+                            <span id="dropdown-role" th:text="${user.userRole}">Admin</span>
+                        </div>
+                        <a id="dropdown-logout" href="/logout">
+                            <i class="bi bi-box-arrow-right"></i> Log Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- main body -->
+    <main id="main-body">
+
+        <div id="body-background">
+            <div id="body-overlay"></div>
+        </div>
+
+        <div id="body-content">
+            <div class="text-center">
+
+                <h1 id="body-heading" class="display-4 fw-bold mb-4">
+                    Admin
+                    <span id="body-heading-accent"> Dashboard</span>
+                </h1>
+
+                <p id="body-subheading" class="fs-5 mb-5 text-white">
+                    Welcome to the Admin Dashboard!! Here you can see every user that has an account on our app, or you can create flash cards for programming concepts to help you practice and reinforce your learning.
+                </p>
+
+                <!-- create flash card window -->
+                <div id="feature-cards-row" class="row g-4 mb-5 mx-auto" style="max-width: 400px;">
+                    <div class="col-12">
+                        <a href="/create_card" style="text-decoration: none;">
+                        <div id="feature-card-create" class="feature-card p-4 rounded-4 h-100">
+                            <div id="icon-create" class="icon-container mx-auto mb-3">
+                                <img th:src="@{/img/book_icon.svg}" width="45" height="45" alt="Create"/>
+                            </div>
+                            <h3 id="feature-card-create-title" class="h5 fw-semibold mb-2">Create Flash Cards</h3>
+                            <p id="feature-card-create-desc" class="small mb-0 text-white">
+                                Build custom flash cards for any programming concept you want to learn
+                            </p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- users table -->
+                <div id="users-table-container" class="feature-card rounded-4 mx-auto" style="max-width: 800px;">
+                    <div id="users-table-header" class="p-3 pb-0">
+                        <h5 id="users-table-title" class="fw-semibold text-white text-center mb-3">All Users</h5>
+                    </div>
+                    <div class="table-responsive p-3 pt-0">
+                        <table id="users-table" class="w-100">
+                            <thead id="users-table-head">
+                                <tr>
+                                    <th id="col-username">Username</th>
+                                    <th id="col-role">Role</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <tr class="user-row" th:each="u : ${users}">
+                                    <td class="user-name-cell" th:text="${u.userName}">username</td>
+                                    <td>
+                                        <span class="role-badge"
+                                              th:classappend="${u.userRole == 'ADMIN'} ? 'badge-admin' : 'badge-user'"
+                                              th:text="${u.userRole}">USER</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/account-dropdown.js}"></script>
+
 </body>
+</html>
