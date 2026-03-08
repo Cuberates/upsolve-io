@@ -5,10 +5,10 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.ui.Model;
 
 import com.example.cmpt276.upsolve.models.User;
 import com.example.cmpt276.upsolve.models.UserRepository;
@@ -38,6 +38,7 @@ public class UserController {
     
     // Role-based redirection just for demonstration. 
     if (user.getUserRole().equals("ADMIN")) {
+      model.addAttribute("users", userRepository.findAll());//for the show all users feature in admin_dashboard
       return "admin_dashboard"; 
     }
     return "dashboard";
@@ -48,7 +49,10 @@ public class UserController {
     User user = (User) session.getAttribute("session_user");
     if (user == null) { return "login"; }
     model.addAttribute("user", user);
-    if (user.getUserRole().equals("ADMIN")) { return "admin_dashboard"; }
+    if (user.getUserRole().equals("ADMIN")) { 
+      model.addAttribute("users", userRepository.findAll());//for the show all users feature in admin_dashboard
+      return "admin_dashboard"; 
+    }
     return "dashboard";
   }
 
