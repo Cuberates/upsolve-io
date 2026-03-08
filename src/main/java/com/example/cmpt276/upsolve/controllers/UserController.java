@@ -78,4 +78,17 @@ public class UserController {
     userRepository.save(new User(userName, userPassword));
     return "redirect:/login";
   }
+
+  @GetMapping("/dashboard")
+  public String getCreateCard(Model model, HttpServletRequest request) {
+      User user = (User) request.getSession().getAttribute("session_user");
+      if (user == null) { return "redirect:/login"; }
+      model.addAttribute("user", user);
+      return "dashboard";
+  }
+
+  @GetMapping("/")
+  public String index() {
+      return "index";
+  }
 }
