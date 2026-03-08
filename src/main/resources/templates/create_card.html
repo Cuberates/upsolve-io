@@ -20,7 +20,15 @@
             <div id="create-navbar-right">
                 <div id="account-logo">
                     <img th:src="@{/img/account_circle.svg}" src="img/account_circle.svg" id="account-icon" width="39" height="36" alt="Account"/>
-                    
+                    <div id="account-dropdown">
+                        <div id="dropdown-username">
+                            <span th:text="${user.userName}">username</span>
+                            <span id="dropdown-role" th:text="${user.userRole}">User</span>
+                        </div>
+                        <a id="dropdown-logout" href="/logout">
+                            <i class="bi bi-box-arrow-right"></i> Log Out
+                        </a>
+                    </div>
                 </div>
             </div>
 
