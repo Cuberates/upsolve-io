@@ -101,7 +101,7 @@
                     </div>
 
                     <div id="create-actions">
-                        <a id="btn-cancel" href="/dashboard">Cancel</a>
+                        <a id="btn-cancel" th:href="${user.userRole == 'ADMIN'} ? @{/admin_dashboard} : @{/dashboard}">Cancel</a>
                         <button type="submit" id="btn-save">Save Card</button>
                     </div>
 

@@ -29,7 +29,7 @@ public class ProblemController {
   }
 
   @PostMapping("/create_card")
-  public String createCard(@RequestParam Map<String, String> cardInfo) {
+  public String createCard(@RequestParam Map<String, String> cardInfo, HttpServletRequest request) {
     String problemName = cardInfo.get("problemName");
     String problemDescription = cardInfo.get("problemDescription");
     String problemSolution = cardInfo.get("problemSolution");
@@ -40,7 +40,11 @@ public class ProblemController {
     }
 
     problemRepository.save(new Problem(problemName, problemDescription, problemSolution, problemDifficulty));
-    
+
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user != null && user.getUserRole().equals("ADMIN")) {
+        return "redirect:/admin_dashboard";
+    }
     return "dashboard";
   }
 
