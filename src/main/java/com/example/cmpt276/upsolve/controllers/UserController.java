@@ -5,11 +5,16 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
 
 import com.example.cmpt276.upsolve.models.User;
 import com.example.cmpt276.upsolve.models.UserRepository;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
@@ -17,29 +22,56 @@ public class UserController {
   private UserRepository userRepository;
 
   @PostMapping("/login")
-  public String loginUser(@RequestParam Map<String, String> loginInfo) {
+  public String login(@RequestParam Map<String, String> loginInfo, Model model, HttpServletRequest request, HttpSession session) {
     String userName = loginInfo.get("userName");
     String userPassword = loginInfo.get("userPassword");
+    
+    // System.out.println("Username: " + userName);
+    // System.out.println("Password: " + userPassword);
 
-    System.out.println("Username: " + userName);
-    System.out.println("Password: " + userPassword);
-
-    List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword);
-    User user = users.size() > 0 ? users.get(0) : null;
-
-    if (user != null && "ADMIN".equals(user.getUserRole())) {
-      return "admin_dashboard";
+    List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword); 
+    if (users.isEmpty()) { return "login"; }
+    
+    User user = users.get(0);
+    request.getSession().setAttribute("session_user", user);
+    model.addAttribute("user", user);
+    
+    // Role-based redirection just for demonstration. 
+    if (user.getUserRole().equals("ADMIN")) {
+      return "admin_dashboard"; 
     }
     return "dashboard";
   }
-  @PostMapping("/register")
+
+  @GetMapping("/login")
+  public String getLogin(Model model, HttpServletRequest request, HttpSession session) {
+    User user = (User) session.getAttribute("session_user");
+    if (user == null) { return "login"; }
+    model.addAttribute("user", user);
+    if (user.getUserRole().equals("ADMIN")) { return "admin_dashboard"; }
+    return "dashboard";
+  }
+
+  @GetMapping("/logout")
+  public String destroySession(HttpServletRequest request) { 
+    request.getSession().invalidate();
+    return "redirect:/login";
+  }
+  
+  @GetMapping("/register") 
+  public String register() {
+    return "register";
+
+  }
+
+  @PostMapping("/register") 
   public String registerUser(@RequestParam Map<String, String> registrationInfo) {
     String userName = registrationInfo.get("userName");
     String userPassword = registrationInfo.get("userPassword");
     if (userRepository.findByUserName(userName).size() > 0) {
-      return "Username already exists";
+      return "register";
     }
     userRepository.save(new User(userName, userPassword));
-    return "dashboard";
+    return "redirect:/login";
   }
 }
