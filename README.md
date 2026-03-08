@@ -35,6 +35,6 @@
 - Integrate all database operations and handle essential server-side features.
 - Managing codebase for the application, and implement core functionalities of all features.  
 
-#### Frontend Team: [@Heyman217](https://github.com/hayman217), [@IsrakFarhanSFU](https://github.com/IsrakFarhanSFU), [@yuvrajchahal22](https://github.com/yuvrajchahal22).
+#### Frontend Team: [@Hayman217](https://github.com/hayman217), [@IsrakFarhanSFU](https://github.com/IsrakFarhanSFU), [@yuvrajchahal22](https://github.com/yuvrajchahal22).
 - Research and design responsive UI/UX components and prototypes. 
 - Implement UI/UX layouts for all features of the application.
