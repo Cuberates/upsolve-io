@@ -21,6 +21,11 @@ public class UserController {
   @Autowired
   private UserRepository userRepository;
 
+  @GetMapping("/")
+  public String index() { 
+    return "redirect:/login";
+  }
+
   @PostMapping("/login")
   public String login(@RequestParam Map<String, String> loginInfo, Model model, HttpServletRequest request, HttpSession session) {
     String userName = loginInfo.get("userName");
@@ -100,8 +105,4 @@ public class UserController {
       return "admin_dashboard";
   }
 
-  @GetMapping("/")
-  public String index() {
-      return "index";
-  }
 }
