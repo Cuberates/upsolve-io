@@ -82,7 +82,11 @@ public class UserController {
   @GetMapping("/dashboard")
   public String getCreateCard(Model model, HttpServletRequest request) {
       User user = (User) request.getSession().getAttribute("session_user");
-      if (user == null) { return "redirect:/login"; }
+      if (user == null) { 
+        return "redirect:/login"; 
+      } else if (user.getUserRole().equals("ADMIN")){
+          return "redirect:/admin_dashboard";
+      }
       model.addAttribute("user", user);
       return "dashboard";
   }
