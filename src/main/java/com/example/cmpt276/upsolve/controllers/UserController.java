@@ -80,7 +80,9 @@ public class UserController {
   }
   
   @GetMapping("/register") 
-  public String register() {
+  public String register(HttpServletRequest request) {
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user != null) { return "redirect:/dashboard";  }
     return "register";
 
   }
