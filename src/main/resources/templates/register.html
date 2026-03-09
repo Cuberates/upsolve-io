@@ -54,6 +54,8 @@
           
           <button type="submit" class="submit-btn with-top-gap">Register</button>
 
+          <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red; margin-top:10px;"></p>
+
           <div class="helper-links">
             Already have an account?
             <a th:href="@{/login}" href="/login">Login</a>

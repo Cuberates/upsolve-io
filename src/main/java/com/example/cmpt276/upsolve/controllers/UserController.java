@@ -34,17 +34,29 @@ public class UserController {
     // System.out.println("Username: " + userName);
     // System.out.println("Password: " + userPassword);
 
-    List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword); 
-    if (users.isEmpty()) { return "login"; }
+   // Check if username exists
+    List<User> usersByName = userRepository.findByUserName(userName);
+    if (usersByName.isEmpty()) {
+        model.addAttribute("errorMessage", "Username not found!");
+        return "login";
+    }
     
+   // Check if username + password match
+    List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword); 
+    if (users.isEmpty()) {
+        model.addAttribute("errorMessage", "Incorrect password!");
+        return "login";
+    }
+
+    // Successful login
     User user = users.get(0);
     request.getSession().setAttribute("session_user", user);
     model.addAttribute("user", user);
-    
-    // Role-based redirection just for demonstration. 
-    if (user.getUserRole().equals("ADMIN")) {
-      model.addAttribute("users", userRepository.findAll());//for the show all users feature in admin_dashboard
-      return "admin_dashboard"; 
+
+   // Role-based redirection
+    if ("ADMIN".equals(user.getUserRole())) {
+        model.addAttribute("users", userRepository.findAll());
+        return "admin_dashboard"; 
     }
     return "dashboard";
   }
@@ -74,10 +86,11 @@ public class UserController {
   }
 
   @PostMapping("/register") 
-  public String registerUser(@RequestParam Map<String, String> registrationInfo) {
+  public String registerUser(@RequestParam Map<String, String> registrationInfo, Model model) {
     String userName = registrationInfo.get("userName");
     String userPassword = registrationInfo.get("userPassword");
     if (userRepository.findByUserName(userName).size() > 0) {
+      model.addAttribute("errorMessage", "Username already exists! Please choose another.");
       return "register";
     }
     userRepository.save(new User(userName, userPassword));
