@@ -74,10 +74,11 @@ public class UserController {
   }
 
   @PostMapping("/register") 
-  public String registerUser(@RequestParam Map<String, String> registrationInfo) {
+  public String registerUser(@RequestParam Map<String, String> registrationInfo, Model model) {
     String userName = registrationInfo.get("userName");
     String userPassword = registrationInfo.get("userPassword");
     if (userRepository.findByUserName(userName).size() > 0) {
+      model.addAttribute("errorMessage", "Username already exists! Please choose another.");
       return "register";
     }
     userRepository.save(new User(userName, userPassword));
