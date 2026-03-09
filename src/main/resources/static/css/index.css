@@ -7,7 +7,7 @@
 html, body {
     width: 100%;
     height: 100%;
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', Arial, sans-serif;
     background: #434348;
     color: white;
 }
@@ -51,33 +51,33 @@ body {
     font-size: 1.05rem;
 }
 
-.sign-in-btn {
+/* .sign-in-btn {
     background: #0e1022;
     padding: 8px 16px;
     border-radius: 999px;
     font-weight: 600;
     font-size: 0.9rem;
-}
+} */
 
 .hero-content {
     max-width: 620px;
-    margin-top: 150px;
+    margin-top: 200px;
     margin-left: 20px;
 }
 
 .hero-content h1 {
-    font-size: 3rem;
+    font-size: 3.1rem;
     line-height: 1.08;
     font-weight: 700;
     margin-bottom: 18px;
 
-    /*text-decoration: underline;
+    /* text-decoration: underline;
     text-decoration-thickness: 3px;
-    text-underline-offset: 5px;*/
+    text-underline-offset: 5px; */
 }
 
 .hero-content p {
-    font-size: 1rem;
+    font-size: 1.2rem;
     line-height: 1.8;
     max-width: 700px;
     color: rgba(255, 255, 255, 0.92);
@@ -87,30 +87,32 @@ body {
 .hero-buttons {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 40px;
 }
 
-.primary-btn {
+.sign-in-btn,.primary-btn {
     text-decoration: none;
     color: white;
     background: #0e1022;
-    padding: 10px 20px;   
+    padding: 14px 32px;   
     border-radius: 999px;
     font-weight: 600;
-    font-size: 0.9rem;   
+    font-size: 1.1rem;   
 
-    box-shadow: 0px 8px 22px rgba(70,170,255,0.45);
+    box-shadow: 0px 12px 40px 8px #314481;
 }
 
 .text-btn {
     color: white;           
     text-decoration: none;  
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     font-weight: 600;
+    text-decoration: underline;
 }
 
 .primary-btn:hover,
+.sign-in-btn:hover,
 .text-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0px 12px 28px rgba(70, 170, 255, 0.55);
+    box-shadow: 0px 12px 40px 8px #314481;
 }
