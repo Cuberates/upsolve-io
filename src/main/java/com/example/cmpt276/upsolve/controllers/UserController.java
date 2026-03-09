@@ -23,7 +23,7 @@ public class UserController {
 
   @GetMapping("/")
   public String index() { 
-    return "redirect:/login";
+    return "index";
   }
 
   @PostMapping("/login")
