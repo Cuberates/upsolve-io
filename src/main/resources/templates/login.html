@@ -52,6 +52,8 @@
             </div>
           </div>
 
+          <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red; margin-top:10px;"></p>
+
           <button type="submit" class="submit-btn">Login</button>
 
           <div class="helper-links">
