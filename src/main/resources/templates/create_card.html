@@ -100,6 +100,10 @@
                         </div>
                     </div>
 
+                    <div th:if="${errorMessage}" class="error-message">
+                         <p th:text="${errorMessage}"></p>
+                    </div>
+
                     <div id="create-actions">
                         <a id="btn-cancel" th:href="${user.userRole == 'ADMIN'} ? @{/admin_dashboard} : @{/dashboard}">Cancel</a>
                         <button type="submit" id="btn-save">Save Card</button>

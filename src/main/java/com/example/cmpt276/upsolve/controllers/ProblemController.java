@@ -29,23 +29,30 @@ public class ProblemController {
   }
 
   @PostMapping("/create_card")
-  public String createCard(@RequestParam Map<String, String> cardInfo, HttpServletRequest request) {
+  public String createCard(@RequestParam Map<String, String> cardInfo, HttpServletRequest request, Model model) {
+    
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user == null) {
+        return "redirect:/login";
+    }
+    model.addAttribute("user", user);
+    
     String problemName = cardInfo.get("problemName");
     String problemDescription = cardInfo.get("problemDescription");
     String problemSolution = cardInfo.get("problemSolution");
     int problemDifficulty = Integer.parseInt(cardInfo.get("problemDifficulty"));
 
     if (problemRepository.findByProblemName(problemName).size() > 0) {
-      return "Problem already exists";
+      model.addAttribute("errorMessage", "Problem already exists!");
+      return "create_card"; 
     }
 
     problemRepository.save(new Problem(problemName, problemDescription, problemSolution, problemDifficulty));
 
-    User user = (User) request.getSession().getAttribute("session_user");
-    if (user != null && user.getUserRole().equals("ADMIN")) {
+    if ("ADMIN".equals(user.getUserRole())) {
         return "redirect:/admin_dashboard";
     }
-    return "dashboard";
+    return "redirect:/dashboard";
   }
 
 }
