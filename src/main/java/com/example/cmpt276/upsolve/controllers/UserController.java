@@ -22,7 +22,15 @@ public class UserController {
   private UserRepository userRepository;
 
   @GetMapping("/")
-  public String index() { 
+  public String index(HttpServletRequest request) {
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user != null) {
+        if ("ADMIN".equals(user.getUserRole())) {
+            return "redirect:/admin_dashboard";
+        } else {
+            return "redirect:/dashboard";
+        }
+    }
     return "index";
   }
 
@@ -38,14 +46,14 @@ public class UserController {
     List<User> usersByName = userRepository.findByUserName(userName);
     if (usersByName.isEmpty()) {
         model.addAttribute("errorMessage", "Username not found!");
-        return "login";
+        return "redirect:/login";
     }
     
    // Check if username + password match
     List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword); 
     if (users.isEmpty()) {
         model.addAttribute("errorMessage", "Incorrect password!");
-        return "login";
+        return "redirect:/login";
     }
 
     // Successful login
@@ -56,9 +64,9 @@ public class UserController {
    // Role-based redirection
     if ("ADMIN".equals(user.getUserRole())) {
         model.addAttribute("users", userRepository.findAll());
-        return "admin_dashboard"; 
+        return "redirect:/admin_dashboard"; 
     }
-    return "dashboard";
+    return "redirect:/dashboard";
   }
 
   @GetMapping("/login")
@@ -108,6 +116,7 @@ public class UserController {
           return "redirect:/admin_dashboard";
       }
       model.addAttribute("user", user);
+      model.addAttribute("users", userRepository.findAll());
       return "dashboard";
   }
 
