@@ -37,27 +37,18 @@ public class UserController {
   public String login(@RequestParam Map<String, String> loginInfo, Model model, HttpServletRequest request, HttpSession session) {
     String userName = loginInfo.get("userName");
     String userPassword = loginInfo.get("userPassword");
-    
-    List<User> usersByName = userRepository.findByUserName(userName);
-    if (usersByName.isEmpty()) {
-      model.addAttribute("errorMessage", "Username not found!");
-      return "redirect:/login";
-      
-    }
-    
-    List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword); 
-    if (users.isEmpty()) {
-      model.addAttribute("errorMessage", "Incorrect password!");
-      return "redirect:/login";
-      
+
+    List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword);
+
+    if (users.isEmpty()) { 
+      model.addAttribute("errorMessage", "Invalid username or password!"); 
+      return "redirect:/login"; 
     }
 
-    User user = users.get(0);
+    User user = users.get(0); 
     request.getSession().setAttribute("session_user", user);
     model.addAttribute("user", user);
-
     if (user.getUserRole().equals("ADMIN")) {
-      model.addAttribute("users", userRepository.findAll());
       return "redirect:/admin_dashboard";  
     }
     return "redirect:/dashboard";
@@ -66,24 +57,18 @@ public class UserController {
   @GetMapping("/")
   public String index(HttpServletRequest request) {
     User user = (User) request.getSession().getAttribute("session_user");
-    if (user != null) {
-      if (user.getUserRole().equals("ADMIN")) {
-        return "redirect:/admin_dashboard";  
-      }
-      return "redirect:/dashboard";
-    }
-    return "home";
+    if (user == null) return "home";
+    if (user.getUserRole().equals("ADMIN")) return "redirect:/admin_dashboard";
+    return "redirect:/dashboard";
   }
 
   @GetMapping("/login")
   public String getLogin(Model model, HttpServletRequest request, HttpSession session) {
     User user = (User) session.getAttribute("session_user");
-    if (user == null) { return "login"; }
     model.addAttribute("user", user);
-    if (user.getUserRole().equals("ADMIN")) { 
-      return "redirect:/admin_dashboard"; 
-    }
-    return "redirect:/dashboard";
+    if (user != null) { return "redirect:/dashboard"; }
+
+    return "login";
   }
 
   @GetMapping("/logout")
@@ -93,36 +78,32 @@ public class UserController {
   }
  
   @GetMapping("/register") 
-  public String register(HttpServletRequest request) {
+  public String getRegister(HttpServletRequest request, Model model) {
     User user = (User) request.getSession().getAttribute("session_user");
+    model.addAttribute("user", user);
     if (user != null) { return "redirect:/logout";  }
     return "register";
   }
 
   @GetMapping("/dashboard")
   public String getDashboard(Model model, HttpServletRequest request) {
-      User user = (User) request.getSession().getAttribute("session_user");
-      if (user == null) { 
-        return "redirect:/login"; 
-      } else if (user.getUserRole().equals("ADMIN")) {
-        System.out.println(user.getUserRole());
-        model.addAttribute("users", userRepository.findAll()); 
-        return "/users/admin_dashboard";
-      }
-      model.addAttribute("user", user);
-      return "/users/dashboard";
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user == null) { return "redirect:/login"; }
+    if (user .getUserRole().equals("ADMIN")) { return "redirect:/admin_dashboard"; }
+    model.addAttribute("user", user);
+    return "users/dashboard";
   }
 
+  // Proprietary
   @GetMapping("/admin_dashboard")
   public String getAdminDashboard(Model model, HttpServletRequest request) {
-      User user = (User) request.getSession().getAttribute("session_user");
-      if (user == null) { 
-        return "redirect:/login";
-      } else if (user.getUserRole().equals("ADMIN")) {
-          return "/users/admin_dashboard";
-      }
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user == null) return "redirect:/login";
+    if (user.getUserRole().equals("ADMIN")) { 
       model.addAttribute("user", user);
-      return "/users/dashboard";
+      model.addAttribute("users", userRepository.findAll()); 
+      return "users/admin";
+    }
+    return "redirect:/";
   }
-
 }

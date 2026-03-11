@@ -25,7 +25,7 @@ public class ProblemController {
     User user = (User) request.getSession().getAttribute("session_user");
     if (user == null) { return "redirect:/login"; }
     model.addAttribute("user", user);
-    return "/card/create";
+    return "/cards/create";
     
   }
 
@@ -35,7 +35,7 @@ public class ProblemController {
     if (user == null) { return "redirect:/login"; }
     model.addAttribute("user", user);
     model.addAttribute("problems", problemRepository.findAll());
-    return "/card/view";
+    return "/cards/view";
   }
 
   @PostMapping("/problems/new")
@@ -52,7 +52,7 @@ public class ProblemController {
 
     if (problemRepository.findByProblemName(problemName).size() > 0) {
       model.addAttribute("errorMessage", "Problem already exists!");
-      return "/card/create";
+      return "/cards/create";
     }
 
     problemRepository.save(new Problem(problemName, problemDescription, problemSolution, problemDifficulty));
