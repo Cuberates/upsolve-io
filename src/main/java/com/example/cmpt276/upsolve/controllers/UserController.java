@@ -20,18 +20,17 @@ import jakarta.servlet.http.HttpSession;
 public class UserController {
   @Autowired
   private UserRepository userRepository;
-
-  @GetMapping("/")
-  public String index(HttpServletRequest request) {
-    User user = (User) request.getSession().getAttribute("session_user");
-    if (user != null) {
-        if ("ADMIN".equals(user.getUserRole())) {
-            return "redirect:/admin_dashboard";
-        } else {
-            return "redirect:/dashboard";
-        }
+  
+  @PostMapping("/register") 
+  public String registerUser(@RequestParam Map<String, String> registrationInfo, Model model) {
+    String userName = registrationInfo.get("userName");
+    String userPassword = registrationInfo.get("userPassword");
+    if (userRepository.findByUserName(userName).size() > 0) {
+      model.addAttribute("errorMessage", "Username already exists! Please choose another.");
+      return "redirect:/register";
     }
-    return "index";
+    userRepository.save(new User(userName, userPassword));
+    return "redirect:/login";
   }
 
   @PostMapping("/login")
@@ -39,34 +38,41 @@ public class UserController {
     String userName = loginInfo.get("userName");
     String userPassword = loginInfo.get("userPassword");
     
-    // System.out.println("Username: " + userName);
-    // System.out.println("Password: " + userPassword);
-
-   // Check if username exists
     List<User> usersByName = userRepository.findByUserName(userName);
     if (usersByName.isEmpty()) {
-        model.addAttribute("errorMessage", "Username not found!");
-        return "redirect:/login";
+      model.addAttribute("errorMessage", "Username not found!");
+      return "redirect:/login";
+      
     }
     
-   // Check if username + password match
     List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword); 
     if (users.isEmpty()) {
-        model.addAttribute("errorMessage", "Incorrect password!");
-        return "redirect:/login";
+      model.addAttribute("errorMessage", "Incorrect password!");
+      return "redirect:/login";
+      
     }
 
-    // Successful login
     User user = users.get(0);
     request.getSession().setAttribute("session_user", user);
     model.addAttribute("user", user);
 
-   // Role-based redirection
-    if ("ADMIN".equals(user.getUserRole())) {
-        model.addAttribute("users", userRepository.findAll());
-        return "redirect:/admin_dashboard"; 
+    if (user.getUserRole().equals("ADMIN")) {
+      model.addAttribute("users", userRepository.findAll());
+      return "redirect:/admin_dashboard";  
     }
     return "redirect:/dashboard";
+  }
+
+  @GetMapping("/")
+  public String index(HttpServletRequest request) {
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user != null) {
+      if (user.getUserRole().equals("ADMIN")) {
+        return "redirect:/admin_dashboard";  
+      }
+      return "redirect:/dashboard";
+    }
+    return "home";
   }
 
   @GetMapping("/login")
@@ -75,62 +81,48 @@ public class UserController {
     if (user == null) { return "login"; }
     model.addAttribute("user", user);
     if (user.getUserRole().equals("ADMIN")) { 
-      model.addAttribute("users", userRepository.findAll());//for the show all users feature in admin_dashboard
-      return "admin_dashboard"; 
+      return "redirect:/admin_dashboard"; 
     }
-    return "dashboard";
+    return "redirect:/dashboard";
   }
 
   @GetMapping("/logout")
   public String destroySession(HttpServletRequest request) { 
     request.getSession().invalidate();
-    return "redirect:/login";
+    return "redirect:/";
   }
-  
+ 
   @GetMapping("/register") 
   public String register(HttpServletRequest request) {
     User user = (User) request.getSession().getAttribute("session_user");
-    if (user != null) { return "redirect:/dashboard";  }
+    if (user != null) { return "redirect:/logout";  }
     return "register";
-
-  }
-
-  @PostMapping("/register") 
-  public String registerUser(@RequestParam Map<String, String> registrationInfo, Model model) {
-    String userName = registrationInfo.get("userName");
-    String userPassword = registrationInfo.get("userPassword");
-    if (userRepository.findByUserName(userName).size() > 0) {
-      model.addAttribute("errorMessage", "Username already exists! Please choose another.");
-      return "register";
-    }
-    userRepository.save(new User(userName, userPassword));
-    return "redirect:/login";
   }
 
   @GetMapping("/dashboard")
-  public String getCreateCard(Model model, HttpServletRequest request) {
+  public String getDashboard(Model model, HttpServletRequest request) {
       User user = (User) request.getSession().getAttribute("session_user");
       if (user == null) { 
         return "redirect:/login"; 
-      } else if (user.getUserRole().equals("ADMIN")){
-          return "redirect:/admin_dashboard";
+      } else if (user.getUserRole().equals("ADMIN")) {
+        System.out.println(user.getUserRole());
+        model.addAttribute("users", userRepository.findAll()); 
+        return "/users/admin_dashboard";
       }
       model.addAttribute("user", user);
-      model.addAttribute("users", userRepository.findAll());
-      return "dashboard";
+      return "/users/dashboard";
   }
 
   @GetMapping("/admin_dashboard")
-  public String getCreateCardAdmin(Model model, HttpServletRequest request) {
+  public String getAdminDashboard(Model model, HttpServletRequest request) {
       User user = (User) request.getSession().getAttribute("session_user");
       if (user == null) { 
-        return "redirect:/login"; 
-      } else if (!user.getUserRole().equals("ADMIN")){
-          return "redirect:/dashboard";
+        return "redirect:/login";
+      } else if (user.getUserRole().equals("ADMIN")) {
+          return "/users/admin_dashboard";
       }
       model.addAttribute("user", user);
-      model.addAttribute("users", userRepository.findAll());
-      return "admin_dashboard";
+      return "/users/dashboard";
   }
 
 }
