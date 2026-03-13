@@ -20,23 +20,31 @@ public class ProblemController {
   @Autowired
   private ProblemRepository problemRepository;
 
-  @GetMapping("/create_card")
+  @GetMapping("/problems/new")
   public String getCreateCard(Model model, HttpServletRequest request) {
-      User user = (User) request.getSession().getAttribute("session_user");
-      if (user == null) { return "redirect:/login"; }
-      model.addAttribute("user", user);
-      return "create_card";
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user == null) { return "redirect:/login"; }
+    model.addAttribute("user", user);
+    return "/cards/create";
+    
   }
 
-  @PostMapping("/create_card")
-  public String createCard(@RequestParam Map<String, String> cardInfo, HttpServletRequest request, Model model) {
-    
+  @GetMapping("/problems")
+  public String getProblems(Model model, HttpServletRequest request) {  
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user == null) { return "redirect:/login"; }
+    model.addAttribute("user", user);
+    model.addAttribute("problems", problemRepository.findAll());
+    return "/cards/view";
+  }
+
+  @PostMapping("/problems/new")
+  public String createCard(@RequestParam Map<String, String> cardInfo, HttpServletRequest request, Model model) { 
     User user = (User) request.getSession().getAttribute("session_user");
     if (user == null) {
         return "redirect:/login";
     }
-    model.addAttribute("user", user);
-    
+   
     String problemName = cardInfo.get("problemName");
     String problemDescription = cardInfo.get("problemDescription");
     String problemSolution = cardInfo.get("problemSolution");
@@ -44,15 +52,15 @@ public class ProblemController {
 
     if (problemRepository.findByProblemName(problemName).size() > 0) {
       model.addAttribute("errorMessage", "Problem already exists!");
-      return "create_card"; 
+      return "/cards/create";
     }
 
     problemRepository.save(new Problem(problemName, problemDescription, problemSolution, problemDifficulty));
 
-    if ("ADMIN".equals(user.getUserRole())) {
-        return "redirect:/admin_dashboard";
+    if (user.getUserRole().equals("ADMIN")) {
+      return "redirect:/admin_dashboard";
     }
-    return "redirect:/dashboard";
+    return "redirect:/dashboard";  
   }
 
 }
