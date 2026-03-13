@@ -1,4 +1,4 @@
-# Upsolve: Experimental Knowledge Management System for Competitive Programming. 
+# Upsolve: Experimental Learning Management System (LMS) for Competitive Programming. 
 
 ## 1. Introduction
 - [Competitive Programmers](https://en.wikipedia.org/wiki/Competitive_programming) have different systems for intensive studying before programming competitions, but there has never been a personalized system, which also happens to be minimalistic, specifically targeting this stage of preparation. Most programmers solve many problems on drastically different platforms but have no system for managing, reviewing, or learning from them after participating in contests.
