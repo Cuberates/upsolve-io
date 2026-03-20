@@ -36,5 +36,5 @@ build/
 .DS_Store
 
 ### Environment Files ###
-.env
-main/resources/application.properties
+*.env
+src/main/resources/application.properties
