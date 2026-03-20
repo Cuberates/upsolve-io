@@ -25,6 +25,7 @@ public class UserController {
   public String registerUser(@RequestParam Map<String, String> registrationInfo, Model model) {
     String userName = registrationInfo.get("userName");
     String userPassword = registrationInfo.get("userPassword");
+
     if (userRepository.findByUserName(userName).size() > 0) {
       model.addAttribute("errorMessage", "Username already exists! Please choose another.");
       return "redirect:/register";
@@ -37,7 +38,7 @@ public class UserController {
   public String login(@RequestParam Map<String, String> loginInfo, Model model, HttpServletRequest request, HttpSession session) {
     String userName = loginInfo.get("userName");
     String userPassword = loginInfo.get("userPassword");
-
+ 
     List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword);
 
     if (users.isEmpty()) { 
@@ -46,8 +47,10 @@ public class UserController {
     }
 
     User user = users.get(0); 
+
     request.getSession().setAttribute("session_user", user);
     model.addAttribute("user", user);
+
     if (user.getUserRole().equals("ADMIN")) {
       return "redirect:/admin_dashboard";  
     }
