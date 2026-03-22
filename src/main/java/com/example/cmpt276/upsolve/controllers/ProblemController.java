@@ -47,7 +47,7 @@ public class ProblemController {
     System.out.println("PROBLEM ID: " + problemID); 
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problem", problem);
-    return "/cards/view";
+    return "/cards/study";
   }
 
   @GetMapping("/problems/new")
