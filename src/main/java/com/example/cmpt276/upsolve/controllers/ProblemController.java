@@ -107,9 +107,9 @@ public class ProblemController {
     }
     problemRepository.delete(problem);
     if (user.getUserRole().equals("ADMIN")) {
-      return "redirect:/admin_dashboard";
+      return "redirect:/problems";
     }
-    return "redirect:/dashboard";  
+    return "redirect:/problems";  
   }
 
   @GetMapping("/problems/delete/{problemID}")
