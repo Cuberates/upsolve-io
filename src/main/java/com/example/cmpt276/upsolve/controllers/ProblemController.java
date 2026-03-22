@@ -38,10 +38,13 @@ public class ProblemController {
     if (user == null) { return "redirect:/login"; }
     
     Problem problem = problemRepository.findByProblemID(problemID).get(0);
+    if (problem == null) { return "redirect:/error"; }
+    
+    // Mark as studied when opened
+    problem.setStudied(true);
+    problemRepository.save(problem);
     
     System.out.println("PROBLEM ID: " + problemID); 
-
-    if (problem == null) { return "redirect:/error"; } 
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problem", problem);
     return "/cards/view";
