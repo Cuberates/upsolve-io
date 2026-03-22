@@ -441,3 +441,89 @@ body {
     #view-navbar-container { padding: 0 16px; }
     #view-main { padding: 24px 16px; }
 }
+
+#delete-card {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+}
+ 
+#delete-card.show { display: flex; }
+ 
+#delete-card-inner {
+    background: #09090b;
+    border: 1px solid #0099F2;
+    border-radius: 16px;
+    padding: 32px;
+    width: 420px;
+    max-width: 90vw;
+    text-align: center;
+    box-shadow: 0 0 124px #0099F2;
+}
+ 
+#delete-card-icon {
+    font-size: 2rem;
+    color: #f87171;
+    margin-bottom: 16px;
+}
+ 
+#delete-card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 10px 0;
+}
+ 
+#delete-card-message {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.5);
+    margin: 0 0 24px 0;
+    line-height: 1.6;
+}
+ 
+#delete-card-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+ 
+#delete-card-cancel {
+    padding: 9px 24px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+ 
+#delete-card-cancel:hover {
+    background: rgba(255,255,255,0.08);
+    color: #ffffff;
+}
+ 
+#delete-card-form { margin: 0; }
+ 
+#delete-card-confirm {
+    padding: 9px 24px;
+    border-radius: 8px;
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.35);
+    color: #fca5a5;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+ 
+#delete-card-confirm:hover {
+    background: rgba(239,68,68,0.25);
+    color: #ffffff;
+}
