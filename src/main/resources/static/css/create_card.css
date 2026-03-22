@@ -18,15 +18,20 @@ body {
 
 
 #create-navbar {
-    height: 60px;
+    height: 64px;
     width: 100%;
-    background: #000000;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(9, 9, 11, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 #create-navbar-container {
     height: 100%;
-    padding: 0 26px;
+    padding: 0 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -58,7 +63,7 @@ body {
     right: 0;
     min-width: 200px;
     background: #1a1a1a;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 12px;
     padding: 8px;
     z-index: 2000;
@@ -103,7 +108,7 @@ body {
 
 
 #create-main {
-    height: calc(100vh - 60px);
+    height: calc(100vh - 64px);
     background: #05070b;
 }
 
@@ -126,13 +131,13 @@ body {
 #right-panel {
     min-width: 0;
     min-height: 0;
-    background: #0d1117; 
+    background: #0d1117;
 }
 
 #left-panel {
     display: flex;
     flex-direction: column;
-    border-right: 1px solid rgba(0, 153, 242, 0.1);
+    border-right: 2px solid rgba(0, 153, 242, 0.2);
 }
 
 #right-panel {
@@ -149,7 +154,7 @@ body {
 
 #create-title {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 1.8rem;
     font-weight: 800;
     color: #ffffff;
 }
@@ -157,7 +162,7 @@ body {
 #create-subtitle {
     margin: 6px 0 0;
     color: #7d8590;
-    font-size: 0.72rem;
+    font-size: 0.84rem;
     line-height: 1.4;
 }
 
@@ -166,7 +171,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 0;
-    background: #0d1117; 
+    background: #0d1117;
 }
 
 .editor-block.grow {
@@ -194,8 +199,8 @@ body {
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid rgba(255, 255, 255, 0.035);
-    background: #0d1117; 
-    color: #00a2ff;
+    background: rgba(18, 18, 20, 0.95);
+    color: #0099F2;
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -208,9 +213,9 @@ body {
 }
 
 .editor-badge {
-    color: #00a2ff;
-    background: rgba(0, 162, 255, 0.08);
-    border: 1px solid rgba(0, 162, 255, 0.18);
+    color: #0099F2;
+    background: rgba(0, 153, 242, 0.08);
+    border: 1px solid rgba(0, 153, 242, 0.2);
     border-radius: 5px;
     padding: 3px 8px;
     font-size: 0.68rem;
@@ -239,11 +244,11 @@ body {
 
 .CodeMirror-gutters {
     background: #090c10 !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.025);
+    border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
 .CodeMirror-linenumber {
-    color: #4b5563 !important;
+    color: rgba(255,255,255,0.2) !important;
     background: #090c10 !important;
     font-size: 0.82rem;
 }
@@ -272,15 +277,15 @@ body {
 }
 
 .cm-meta {
-    color: #ffffff !important;   
+    color: #ffffff !important;
 }
 
 .cm-keyword {
-    color: #ff4fa3 !important;   
+    color: #ff4fa3 !important;
 }
 
 .cm-def {
-    color: #39a0ff !important;   
+    color: #39a0ff !important;
 }
 
 .cm-variable,
@@ -322,7 +327,7 @@ body {
 #bottom-toolbar {
     padding: 12px 14px 14px;
     border-top: 1px solid rgba(255, 255, 255, 0.035);
-    background: #0d1117;
+    background: rgba(18, 18, 20, 0.95);
 }
 
 .bottom-label {
@@ -342,9 +347,9 @@ body {
 .difficulty-btn {
     height: 40px;
     border-radius: 9px;
-    background: #17191f;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: #8e95a3;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.45);
     font-size: 0.92rem;
     font-weight: 700;
     cursor: pointer;
@@ -352,26 +357,29 @@ body {
 }
 
 .difficulty-btn:hover {
-    border-color: rgba(255, 255, 255, 0.16);
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.8);
 }
 
 .active-easy {
-    background: rgba(34, 197, 94, 0.13);
-    color: #4ade80;
-    border-color: rgba(74, 222, 128, 0.22);
+    background: rgba(16,185,129,0.15);
+    color: #6ee7b7;
+    border-color: rgba(16,185,129,0.35);
+    box-shadow: 0 0 12px rgba(16,185,129,0.1);
 }
 
 .active-medium {
-    background: rgba(234, 179, 8, 0.16);
-    color: #facc15;
-    border-color: rgba(250, 204, 21, 0.22);
-    box-shadow: 0 0 14px rgba(250, 204, 21, 0.08);
+    background: rgba(251,191,36,0.15);
+    color: #fbbf24;
+    border-color: rgba(251,191,36,0.35);
+    box-shadow: 0 0 12px rgba(251,191,36,0.1);
 }
 
 .active-hard {
-    background: rgba(239, 68, 68, 0.13);
-    color: #f87171;
-    border-color: rgba(248, 113, 113, 0.22);
+    background: rgba(239,68,68,0.15);
+    color: #fca5a5;
+    border-color: rgba(239,68,68,0.35);
+    box-shadow: 0 0 12px rgba(239,68,68,0.1);
 }
 
 
@@ -390,14 +398,15 @@ body {
 
 
 #create-actions {
-    height: 66px;
-    background: #05070b;
-    border-top: 1px solid rgba(255, 255, 255, 0.035);
+    height: 64px;
+    background: rgba(9,9,11,0.98);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255,255,255,0.06);
     display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: 10px;
-    padding: 0 18px;
+    padding: 0 32px;
 }
 
 #btn-cancel,
@@ -405,32 +414,39 @@ body {
     height: 38px;
     min-width: 92px;
     border-radius: 8px;
-    font-size: 0.82rem;
+    font-size: 0.875rem;
     font-weight: 600;
     text-decoration: none;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    transition: 0.16s ease;
+    transition: all 0.2s ease;
 }
 
 #btn-cancel {
-    background: #16191f;
-    color: #d5d8de;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 0 20px;
 }
 
 #btn-save {
     border: none;
-    background: #0ea5ff;
+    background: #0099F2;
     color: #ffffff;
     cursor: pointer;
-    box-shadow: 0 8px 20px rgba(14, 165, 255, 0.22);
+    box-shadow: 0 0 15px rgba(0,153,242,0.3);
+    padding: 0 24px;
 }
 
-#btn-cancel:hover,
+#btn-cancel:hover {
+    background: rgba(255,255,255,0.08);
+    color: #ffffff;
+}
+
 #btn-save:hover {
-    transform: translateY(-1px);
+    background: #007acc;
+    box-shadow: 0 0 25px rgba(0,153,242,0.5);
 }
 
 
