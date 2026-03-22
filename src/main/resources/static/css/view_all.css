@@ -41,7 +41,26 @@ body {
     font-size: 1.4rem;
 }
 
-#view-navbar-right { display: flex; align-items: center; }
+#view-navbar-right { 
+    display: flex; 
+    align-items: center; 
+    gap: 30px; 
+}
+
+#back-btn {
+    background: transparent;
+    color: #ffffff !important;
+    border: none;
+    padding: 8px 4px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.2s ease;
+}
 
 #account-logo {
     position: relative;

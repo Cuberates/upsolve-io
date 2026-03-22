@@ -20,7 +20,7 @@
             <div id="navbar-right">
                 
                 <a id="nav-btn-create" href="/problems">
-                    <i class="bi bi-plus-lg"></i> View Cards
+                    <i class="bi bi-collection"></i> View Cards
                 </a>
 
                 <a id="nav-btn-create" href="/problems/new" style="text-decoration: none;">
@@ -64,16 +64,29 @@
                 </p>
 
                 <!-- create flash card window -->
-                <div id="feature-cards-row" class="row g-4 mb-5 mx-auto" style="max-width: 400px;">
-                    <div class="col-12">
+                <div id="feature-cards-row" class="row g-4 mb-5 mx-auto justify-content-center" style="max-width: 860px;">
+                    <div class="col-12 col-md-5">
                         <a href="/problems/new" style="text-decoration: none;">
-                        <div id="feature-card-create" class="feature-card p-4 rounded-4 h-100">
+                        <div class="feature-card p-4 rounded-4 h-100">
                             <div id="icon-create" class="icon-container mx-auto mb-3">
                                 <img th:src="@{/img/book_icon.svg}" width="45" height="45" alt="Create"/>
                             </div>
-                            <h3 id="feature-card-create-title" class="h5 fw-semibold mb-2">Create Flash Cards</h3>
-                            <p id="feature-card-create-desc" class="small mb-0 text-white">
+                            <h3 class="h5 fw-semibold mb-2">Create Flash Cards</h3>
+                            <p class="small mb-0 text-white">
                                 Build custom flash cards for any programming concept you want to learn
+                            </p>
+                        </div>
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-5">
+                        <a href="/problems" style="text-decoration: none;">
+                        <div class="feature-card p-4 rounded-4 h-100">
+                            <div id="icon-sets" class="icon-container mx-auto mb-3">
+                                <img th:src="@{/img/fileIcon.svg}" width="20" height="20" alt="View"/>
+                            </div>
+                            <h3 class="h5 fw-semibold mb-2">View Flash Cards</h3>
+                            <p class="small mb-0 text-white">
+                                Browse, Edit and Study your saved flash cards to reinforce your learning
                             </p>
                         </div>
                         </a>
