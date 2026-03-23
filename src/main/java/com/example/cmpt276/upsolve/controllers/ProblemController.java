@@ -29,7 +29,7 @@ public class ProblemController {
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problems", problemRepository.findAll());
     
-    return "/cards/view_all";
+    return "cards/view_all";
   }
 
   @GetMapping("/problems/view/{problemID}")
@@ -42,7 +42,7 @@ public class ProblemController {
     
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problem", problem);
-    return "/cards/study";
+    return "cards/study";
   }
 
   @GetMapping("/problems/new")
@@ -51,7 +51,7 @@ public class ProblemController {
     if (user == null) { return "redirect:/login"; }
     
     viewModel.addAttribute("user", user);
-    return "/cards/create";
+    return "cards/create";
   }
 
   @GetMapping("/problems/update/{problemID}") 
@@ -64,7 +64,7 @@ public class ProblemController {
 
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problem", problem);
-    return "/cards/update";
+    return "cards/update";
   }
  
   @PostMapping("/problems/new")
@@ -80,8 +80,9 @@ public class ProblemController {
     int problemDifficulty = Integer.parseInt(problemInfo.get("problemDifficulty"));
 
     if (problemRepository.findByProblemName(problemName).size() > 0) {
+      viewModel.addAttribute("user", user);
       viewModel.addAttribute("errorMessage", "Problem already exists!");
-      return "/cards/create";
+      return "cards/create";
     }
     problemRepository.save(new Problem(problemName, problemDescription, problemSolution, problemDifficulty));
     if (user.getUserRole().equals("ADMIN")) {
