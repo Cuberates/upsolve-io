@@ -21,14 +21,14 @@ public class ProblemController {
   @Autowired
   private ProblemRepository problemRepository;
 
-  
-
   @GetMapping("/problems")
   public String getProblems(Model viewModel, HttpServletRequest request) {  
     User user = (User) request.getSession().getAttribute("session_user");
     if (user == null) { return "redirect:/login"; }
+    
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problems", problemRepository.findAll());
+    
     return "/cards/view_all";
   }
 
@@ -37,14 +37,9 @@ public class ProblemController {
     User user = (User) request.getSession().getAttribute("session_user");
     if (user == null) { return "redirect:/login"; }
     
-    Problem problem = problemRepository.findByProblemID(problemID).get(0);
-    if (problem == null) { return "redirect:/error"; }
+    Problem problem = problemRepository.findByProblemID(problemID).get(0); 
+    if (problem == null) { return "redirect:/error"; } 
     
-    // Mark as studied when opened
-    problem.setStudied(true);
-    problemRepository.save(problem);
-    
-    System.out.println("PROBLEM ID: " + problemID); 
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problem", problem);
     return "/cards/study";
@@ -54,6 +49,7 @@ public class ProblemController {
   public String getCreateCard(Model viewModel, HttpServletRequest request) {
     User user = (User) request.getSession().getAttribute("session_user");
     if (user == null) { return "redirect:/login"; }
+    
     viewModel.addAttribute("user", user);
     return "/cards/create";
   }
@@ -62,10 +58,10 @@ public class ProblemController {
   public String getUpdateCard(@PathVariable("problemID") int problemID, HttpServletRequest request, Model viewModel) {
     User user = (User) request.getSession().getAttribute("session_user");
     if (user == null) { return "redirect:/login"; }
-    Problem problem = problemRepository.findByProblemID(problemID).get(0);
-    System.out.println("PROBLEM ID: " + problemID); 
     
+    Problem problem = problemRepository.findByProblemID(problemID).get(0);
     if (problem == null) { return "redirect:/error"; } 
+
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problem", problem);
     return "/cards/update";
