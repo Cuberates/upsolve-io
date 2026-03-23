@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.cmpt276.upsolve.models.User;
 import com.example.cmpt276.upsolve.models.UserRepository;
@@ -22,11 +23,12 @@ public class UserController {
   private UserRepository userRepository;
   
   @PostMapping("/register") 
-  public String registerUser(@RequestParam Map<String, String> registrationInfo, Model model) {
+  public String registerUser(@RequestParam Map<String, String> registrationInfo, RedirectAttributes redirectAttributes, Model model) {
     String userName = registrationInfo.get("userName");
     String userPassword = registrationInfo.get("userPassword");
+
     if (userRepository.findByUserName(userName).size() > 0) {
-      model.addAttribute("errorMessage", "Username already exists! Please choose another.");
+      redirectAttributes.addFlashAttribute("errorMessage", "Username already exists! Please choose another.");
       return "redirect:/register";
     }
     userRepository.save(new User(userName, userPassword));
@@ -34,20 +36,22 @@ public class UserController {
   }
 
   @PostMapping("/login")
-  public String login(@RequestParam Map<String, String> loginInfo, Model model, HttpServletRequest request, HttpSession session) {
+  public String login(@RequestParam Map<String, String> loginInfo, RedirectAttributes redirectAttributes, Model model, HttpServletRequest request, HttpSession session) {
     String userName = loginInfo.get("userName");
     String userPassword = loginInfo.get("userPassword");
-
+ 
     List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword);
 
     if (users.isEmpty()) { 
-      model.addAttribute("errorMessage", "Invalid username or password!"); 
+      redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password!"); 
       return "redirect:/login"; 
     }
 
     User user = users.get(0); 
+
     request.getSession().setAttribute("session_user", user);
     model.addAttribute("user", user);
+
     if (user.getUserRole().equals("ADMIN")) {
       return "redirect:/admin_dashboard";  
     }

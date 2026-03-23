@@ -15,6 +15,7 @@ public class Problem {
     String problemDescription;
     String problemSolution;
     int problemDifficulty;
+    boolean studied = false;
     
     public Problem() {}
     public Problem(String problemName, String problemDescription, String problemSolution, int problemDifficulty) {
@@ -54,4 +55,10 @@ public class Problem {
         this.problemDifficulty = problemDifficulty;
     }
     
+    public boolean isStudied() {
+        return studied;
+    }
+    public void setStudied(boolean studied) {
+        this.studied = studied;
+    }
 }
