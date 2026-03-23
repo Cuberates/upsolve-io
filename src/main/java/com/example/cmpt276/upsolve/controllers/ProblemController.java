@@ -42,7 +42,7 @@ public class ProblemController {
     
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problem", problem);
-    return "/cards/view";
+    return "/cards/study";
   }
 
   @GetMapping("/problems/new")
@@ -103,9 +103,9 @@ public class ProblemController {
     }
     problemRepository.delete(problem);
     if (user.getUserRole().equals("ADMIN")) {
-      return "redirect:/admin_dashboard";
+      return "redirect:/problems";
     }
-    return "redirect:/dashboard";  
+    return "redirect:/problems";  
   }
 
   @GetMapping("/problems/delete/{problemID}")

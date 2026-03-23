@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UpSolve - Update Flash Card</title>
+
+  <link rel="stylesheet" th:href="@{/css/create_card.css}" href="/css/create_card.css" />
+  <link rel="stylesheet" th:href="@{/codemirror/lib/codemirror.css}" href="/codemirror/lib/codemirror.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+  <script th:src="@{/codemirror/lib/codemirror.js}" src="/codemirror/lib/codemirror.js"></script>
+  <script th:src="@{/codemirror/mode/markdown/markdown.js}" src="/codemirror/mode/markdown/markdown.js"></script>
+  <script th:src="@{/codemirror/mode/clike/clike.js}" src="/codemirror/mode/clike/clike.js"></script>
+</head>
+<body>
+  <nav id="create-navbar">
+    <div id="create-navbar-container">
+      <a id="create-navbar-brand" th:href="@{/dashboard}" href="/dashboard">UpSolve</a>
+
+      <div id="create-navbar-right">
+        <div id="account-logo">
+          <img
+            th:src="@{/img/account_circle.svg}"
+            src="/img/account_circle.svg"
+            id="account-icon"
+            width="39"
+            height="36"
+            alt="Account"
+          />
+
+          <div id="account-dropdown">
+            <div id="dropdown-username">
+              <span th:text="${user.userName}">username</span>
+              <span id="dropdown-role" th:text="${user.userRole}">admin</span>
+            </div>
+
+            <a id="dropdown-logout" href="/logout">
+              <i class="bi bi-box-arrow-right"></i> Log Out
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main id="create-main">
+    <form id="create-form"
+          th:action="@{/problems/update/{problemID}(problemID=${problem.problemID})}"
+          method="post">
+
+      <input type="hidden" name="problemID" th:value="${problem.problemID}" />
+
+      <div id="editor-layout">
+        <section id="left-panel">
+          <div id="create-header">
+            <h1 id="create-title">Update Flash Card</h1>
+            <p id="create-subtitle">Edit your programming problem flashcard and save changes</p>
+          </div>
+
+          <div class="editor-block name-block">
+            <div class="editor-header">
+              <span class="editor-label">
+                <i class="bi bi-bookmark"></i>
+                PROBLEM NAME
+              </span>
+              <span class="editor-badge">Markdown</span>
+            </div>
+            <textarea id="problemName" name="problemName" th:text="${problem.problemName}"></textarea>
+          </div>
+
+          <div class="editor-block statement-block grow">
+            <div class="editor-header">
+              <span class="editor-label">
+                <i class="bi bi-file-earmark-text"></i>
+                PROBLEM STATEMENT
+              </span>
+              <span class="editor-badge">Markdown</span>
+            </div>
+            <textarea id="problemDescription" name="problemDescription" th:text="${problem.problemDescription}"></textarea>
+          </div>
+
+          <div id="bottom-toolbar">
+            <div class="editor-header bottom-label">
+              <span class="editor-label">
+                <i class="bi bi-bar-chart-line"></i>
+                DIFFICULTY
+              </span>
+            </div>
+
+            <input
+              type="hidden"
+              id="problemDifficulty"
+              name="problemDifficulty"
+              th:value="${problem.problemDifficulty}"
+            />
+
+            <div id="difficulty-buttons">
+              <button type="button" id="btn-easy" class="difficulty-btn" data-value="1">Easy</button>
+              <button type="button" id="btn-medium" class="difficulty-btn" data-value="2">Medium</button>
+              <button type="button" id="btn-hard" class="difficulty-btn" data-value="3">Hard</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="right-panel">
+          <div class="editor-block full-height">
+            <div class="editor-header">
+              <span class="editor-label">
+                <i class="bi bi-code-slash"></i>
+                SOLUTION
+              </span>
+              <span class="editor-badge">C++</span>
+            </div>
+            <textarea id="problemSolution" name="problemSolution" th:text="${problem.problemSolution}"></textarea>
+          </div>
+        </section>
+      </div>
+
+      <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+      </div>
+
+      <div id="create-actions">
+        <a
+          id="btn-cancel"
+          th:href="${user != null and user.userRole == 'ADMIN'} ? @{/admin_dashboard} : @{/dashboard}"
+          href="/dashboard"
+        >
+          Cancel
+        </a>
+        <button type="submit" id="btn-save">Update Card</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    const difficultyButtons = document.querySelectorAll(".difficulty-btn");
+    const difficultyInput = document.getElementById("problemDifficulty");
+    const currentDifficulty = String(difficultyInput.value || "2");
+
+    function setDifficultyStyle(value) {
+      difficultyButtons.forEach((btn) => {
+        btn.classList.remove("active-easy", "active-medium", "active-hard");
+      });
+
+      if (value === "1") document.getElementById("btn-easy").classList.add("active-easy");
+      if (value === "2") document.getElementById("btn-medium").classList.add("active-medium");
+      if (value === "3") document.getElementById("btn-hard").classList.add("active-hard");
+    }
+
+    setDifficultyStyle(currentDifficulty);
+
+    difficultyButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const value = button.getAttribute("data-value");
+        difficultyInput.value = value;
+        setDifficultyStyle(value);
+      });
+    });
+
+    const nameEditor = CodeMirror.fromTextArea(
+      document.getElementById("problemName"),
+      {
+        mode: "markdown",
+        lineNumbers: true,
+        lineWrapping: true
+      }
+    );
+
+    const descriptionEditor = CodeMirror.fromTextArea(
+      document.getElementById("problemDescription"),
+      {
+        mode: "markdown",
+        lineNumbers: true,
+        lineWrapping: true
+      }
+    );
+
+    const solutionEditor = CodeMirror.fromTextArea(
+      document.getElementById("problemSolution"),
+      {
+        mode: "text/x-c++src",
+        lineNumbers: true,
+        lineWrapping: true
+      }
+    );
+
+    nameEditor.getWrapperElement().style.background = "#05070b";
+    descriptionEditor.getWrapperElement().style.background = "#05070b";
+    solutionEditor.getWrapperElement().style.background = "#05070b";
+
+    document.getElementById("create-form").addEventListener("submit", function (e) {
+      nameEditor.save();
+      descriptionEditor.save();
+      solutionEditor.save();
+
+      const name = nameEditor.getValue().trim();
+      const desc = descriptionEditor.getValue().trim();
+
+      if (!name || !desc) {
+        e.preventDefault();
+        alert("Fill in Problem Name and Problem Statement");
+      }
+    });
+  </script>
+
+  <script th:src="@{/js/account-dropdown.js}" src="/js/account-dropdown.js"></script>
+</body>
+</html>
