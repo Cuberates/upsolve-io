@@ -40,7 +40,6 @@ public class ProblemControllerTest {
         adminUser.setUserRole("ADMIN");
     }
 
-
     @Test
     public void testGetCreateCardWithUser() throws Exception {
         mockMvc.perform(get("/problems/new")
@@ -56,7 +55,6 @@ public class ProblemControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login"));
     }
-
 
     @Test
     public void testCreateCardSuccessRegularUser() throws Exception {
