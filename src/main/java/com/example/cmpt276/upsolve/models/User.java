@@ -12,10 +12,11 @@ public class User {
   @Id 
   @GeneratedValue
   Integer userID;
-  String userName; 
+  String userName;
+  String userEmail; 
   String userPassword;
   String userRole; 
-
+  
   public User() {}
   public User(String userName, String userPassword) {
     this.userName = userName;

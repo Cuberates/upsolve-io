@@ -39,6 +39,9 @@ public class ProblemController {
     
     Problem problem = problemRepository.findByProblemID(problemID).get(0); 
     if (problem == null) { return "redirect:/error"; } 
+    if (user.getUserRole().equals("USER") && !problem.getUserID().equals(user.getUserID())) {
+      return "redirect:/problems";
+    }
     
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problem", problem);
