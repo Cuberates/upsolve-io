@@ -34,10 +34,10 @@ public class ProblemControllerTest {
 
     @BeforeEach
     public void setup() {
-        regularUser = new User("user1", "pass1");
+        regularUser = new User("user1", "pass1", "user1@test.com", "Fluffy", "What is your pet's name?");
         regularUser.setUserRole("USER");
 
-        adminUser = new User("admin", "adminpass");
+        adminUser = new User("admin", "adminpass", "admin@test.com", "Blue", "What is your favorite color?");
         adminUser.setUserRole("ADMIN");
     }
 
@@ -90,9 +90,9 @@ public class ProblemControllerTest {
                 .param("problemDescription", "Desc")
                 .param("problemSolution", "Solution")
                 .param("problemDifficulty", "3"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("create_card"))
-                .andExpect(model().attributeExists("errorMessage"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/create_card"))
+                .andExpect(flash().attributeExists("errorMessage"));
     }
 
     @Test
