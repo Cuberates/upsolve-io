@@ -30,7 +30,33 @@
               >
             </div>
           </div>
+          <div class="field compact">
+            <label for="userEmail">Email</label>
+            <div class="input-wrap">
+              <input
+                type="email"
+                id="userEmail"
+                name="userEmail"
+                placeholder="Enter your email"
+                autocomplete="email"
+                required
+              >
+            </div>
+          </div>  
 
+          <div class="field compact">
+            <label for="confirmedUserEmail">Confirm Email</label>
+            <div class="input-wrap">
+              <input
+                type="email"
+                id="confirmedUserEmail"
+                name="confirmedUserEmail"
+                placeholder="Confirm your email"
+                autocomplete="email"
+                required
+              >
+          </div>
+          
           <div class="field">
             <label for="userPassword">Password</label>
             <div class="input-wrap">
@@ -43,6 +69,27 @@
                 required
               >
               <button class="password-toggle" type="button" aria-label="Show or hide password" onclick="togglePassword('userPassword', this)">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M3 3L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M10.58 10.58C10.21 10.95 10 11.46 10 12C10 13.1 10.9 14 12 14C12.54 14 13.05 13.79 13.42 13.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M9.88 5.09C10.56 4.86 11.27 4.75 12 4.75C17 4.75 20.27 9.11 21 12C20.73 13.07 20.08 14.3 19.1 15.42M14.12 18.91C13.44 19.14 12.73 19.25 12 19.25C7 19.25 3.73 14.89 3 12C3.37 10.54 4.36 8.83 5.88 7.46" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="confirmedUserPassword">Confirm Password</label>
+            <div class="input-wrap">
+              <input
+                type="password"
+                id="confirmedUserPassword"
+                name="confirmedUserPassword"
+                placeholder="Confirm your password"
+                autocomplete="new-password"
+                required
+              >
+              <button class="password-toggle" type="button" aria-label="Show or hide password" onclick="togglePassword('confirmedUserPassword', this)">
                 <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M3 3L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                   <path d="M10.58 10.58C10.21 10.95 10 11.46 10 12C10 13.1 10.9 14 12 14C12.54 14 13.05 13.79 13.42 13.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
