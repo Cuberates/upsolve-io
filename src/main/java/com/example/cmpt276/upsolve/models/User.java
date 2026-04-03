@@ -12,14 +12,20 @@ public class User {
   @Id 
   @GeneratedValue
   Integer userID;
-  String userName; 
+  String userName;
+  String userEmail; 
   String userPassword;
-  String userRole; 
-
+  String userRole;
+  String securityQuestion;
+  String securityAnswer; 
+  
   public User() {}
-  public User(String userName, String userPassword) {
+  public User(String userName, String userPassword,  String userEmail, String securityAnswer, String securityQuestion) {
     this.userName = userName;
-    this.userPassword = userPassword; 
+    this.userPassword = userPassword;
+    this.userEmail = userEmail;
+    this.securityQuestion = securityQuestion;
+    this.securityAnswer = securityAnswer;
     this.userRole = "USER"; 
   }
   public Integer getUserID() {
@@ -45,5 +51,23 @@ public class User {
   }
   public void setUserPassword(String userPassword) {
     this.userPassword = userPassword;
+  }
+  public String getUserEmail() {
+    return userEmail;
+  }
+  public void setUserEmail(String userEmail) {
+    this.userEmail = userEmail;
+  }
+  public String getSecurityQuestion() {
+    return securityQuestion;
+  }
+  public void setSecurityQuestion(String securityQuestion) {
+    this.securityQuestion = securityQuestion;
+  }
+  public String getSecurityAnswer() {
+    return securityAnswer;
+  }
+  public void setSecurityAnswer(String securityAnswer) {
+    this.securityAnswer = securityAnswer;
   }
 } 

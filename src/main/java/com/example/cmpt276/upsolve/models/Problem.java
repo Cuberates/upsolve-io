@@ -11,6 +11,7 @@ public class Problem {
     @Id 
     @GeneratedValue
     Integer problemID;
+    Integer userID;
     String problemName; 
     String problemDescription;
     String problemSolution;
@@ -23,6 +24,12 @@ public class Problem {
         this.problemDescription = problemDescription;
         this.problemSolution = problemSolution;
         this.problemDifficulty = problemDifficulty;
+    }
+    public Integer getUserID() {
+        return userID;
+    }
+    public void setUserID(Integer userID) {
+        this.userID = userID;
     }
     public Integer getProblemID() {
         return problemID;

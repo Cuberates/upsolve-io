@@ -26,12 +26,17 @@ public class UserController {
   public String registerUser(@RequestParam Map<String, String> registrationInfo, RedirectAttributes redirectAttributes, Model model) {
     String userName = registrationInfo.get("userName");
     String userPassword = registrationInfo.get("userPassword");
+    String userEmail = registrationInfo.get("userEmail");
+    String securityQuestion = registrationInfo.get("securityQuestion");
+    String securityAnswer = registrationInfo.get("securityAnswer");
 
     if (userRepository.findByUserName(userName).size() > 0) {
       redirectAttributes.addFlashAttribute("errorMessage", "Username already exists! Please choose another.");
       return "redirect:/register";
     }
-    userRepository.save(new User(userName, userPassword));
+
+    User user = new User(userName, userPassword, userEmail, securityAnswer, securityQuestion);
+    userRepository.save(user);
     return "redirect:/login";
   }
 
@@ -39,6 +44,8 @@ public class UserController {
   public String login(@RequestParam Map<String, String> loginInfo, RedirectAttributes redirectAttributes, Model model, HttpServletRequest request, HttpSession session) {
     String userName = loginInfo.get("userName");
     String userPassword = loginInfo.get("userPassword");
+    String securityQuestion = loginInfo.get("securityQuestion");
+    String securityAnswer = loginInfo.get("securityAnswer");
  
     List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword);
 
@@ -48,6 +55,16 @@ public class UserController {
     }
 
     User user = users.get(0); 
+
+    if (!user.getUserPassword().equals(userPassword)) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password!"); 
+      return "redirect:/login"; 
+    }
+
+    if (!user.getSecurityQuestion().equals(securityQuestion) || !user.getSecurityAnswer().equals(securityAnswer)) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Incorrect security question or answer!"); 
+      return "redirect:/login"; 
+    }
 
     request.getSession().setAttribute("session_user", user);
     model.addAttribute("user", user);
