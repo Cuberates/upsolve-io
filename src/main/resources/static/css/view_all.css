@@ -527,3 +527,26 @@ body {
     background: rgba(239,68,68,0.25);
     color: #ffffff;
 }
+
+.problem-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.problem-stats .badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px; 
+    color: #ffffff;
+}
+
+.problem-stats .badge.bg-success { background-color: #28a745 !important; }
+.problem-stats .badge.bg-danger  { background-color: #dc3545 !important; }
+.problem-stats .badge.bg-warning { background-color: #ffc107 !important; color: #212529; }
+.problem-stats .badge.bg-secondary { background-color: #6c757d !important; }
