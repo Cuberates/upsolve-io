@@ -87,6 +87,19 @@
                             <pre id="solution-pre" th:text="${problem.problemSolution}"></pre>
                         </div>
                     </div>
+
+                    <div id="attempt-buttons" style="display: none; margin-top: 15px;">
+                        <form th:action="@{/problems/{id}/attempt(id=${problem.problemID})}" method="post" style="display:inline;">
+                            <input type="hidden" name="result" value="correct"/>
+                            <button type="submit" class="btn btn-success"></button>
+                        </form>
+
+                        <form th:action="@{/problems/{id}/attempt(id=${problem.problemID})}" method="post" style="display:inline;">
+                            <input type="hidden" name="result" value="incorrect"/>
+                            <button type="submit" class="btn btn-danger"></button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
 
