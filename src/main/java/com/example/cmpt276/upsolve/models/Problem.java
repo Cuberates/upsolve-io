@@ -18,6 +18,8 @@ public class Problem {
     String problemType;
     int problemDifficulty;
     boolean studied = false;
+    int correctAttempts = 0;
+    int incorrectAttempts = 0;
     
     public Problem() {}
     public Problem(String problemName, String problemDescription, String problemSolution, int problemDifficulty, String problemType) {
@@ -75,5 +77,17 @@ public class Problem {
     }
     public void setProblemType(String problemType) {
         this.problemType = problemType;
+    }
+    public int getCorrectAttempts() {
+        return correctAttempts;
+    }
+    public void setCorrectAttempts(int correctAttempts) {
+        this.correctAttempts = correctAttempts;
+    }
+    public int getIncorrectAttempts() {
+        return incorrectAttempts;
+    }
+    public void setIncorrectAttempts(int incorrectAttempts) {
+        this.incorrectAttempts = incorrectAttempts;
     }
 }
