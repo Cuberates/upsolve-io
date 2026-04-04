@@ -15,15 +15,17 @@ public class Problem {
     String problemName; 
     String problemDescription;
     String problemSolution;
+    String problemType;
     int problemDifficulty;
     boolean studied = false;
     
     public Problem() {}
-    public Problem(String problemName, String problemDescription, String problemSolution, int problemDifficulty) {
+    public Problem(String problemName, String problemDescription, String problemSolution, int problemDifficulty, String problemType) {
         this.problemName = problemName;
         this.problemDescription = problemDescription;
         this.problemSolution = problemSolution;
         this.problemDifficulty = problemDifficulty;
+        this.problemType = problemType;
     }
     public Integer getUserID() {
         return userID;
@@ -67,5 +69,11 @@ public class Problem {
     }
     public void setStudied(boolean studied) {
         this.studied = studied;
+    }
+    public String getProblemType() {
+    return problemType;
+    }
+    public void setProblemType(String problemType) {
+        this.problemType = problemType;
     }
 }

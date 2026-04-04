@@ -137,6 +137,8 @@ body {
 #left-panel {
     display: flex;
     flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
     border-right: 2px solid rgba(0, 153, 242, 0.2);
 }
 
@@ -185,6 +187,12 @@ body {
 
 .name-block {
     height: 88px;
+    flex-shrink: 0;
+}
+
+#type-editor-block {
+    height: 88px;
+    flex-shrink: 0;
 }
 
 .statement-block {
@@ -258,6 +266,13 @@ body {
 }
 
 #problemName + .CodeMirror {
+    height: 46px;
+    min-height: 46px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.035);
+    background: #090c10 !important;
+}
+
+#problemType + .CodeMirror {
     height: 46px;
     min-height: 46px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.035);

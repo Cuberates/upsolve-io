@@ -69,6 +69,18 @@
             <textarea id="problemName" name="problemName" th:text="${problem.problemName}"></textarea>
           </div>
 
+          <!-- Problem Type -->
+          <div class="editor-block name-block" id="type-editor-block">
+            <div class="editor-header">
+              <span class="editor-label">
+                <i class="bi bi-tag"></i>
+                PROBLEM TYPE
+              </span>
+              <span class="editor-badge">Markdown</span>
+            </div>
+            <textarea id="problemType" name="problemType" th:text="${problem.problemType}"></textarea>
+          </div>
+
           <div class="editor-block statement-block grow">
             <div class="editor-header">
               <span class="editor-label">
@@ -168,6 +180,15 @@
       }
     );
 
+    const typeEditor = CodeMirror.fromTextArea(
+      document.getElementById("problemType"),
+      {
+        mode: "markdown",
+        lineNumbers: true,
+        lineWrapping: true
+      }
+    );
+
     const descriptionEditor = CodeMirror.fromTextArea(
       document.getElementById("problemDescription"),
       {
@@ -189,18 +210,21 @@
     nameEditor.getWrapperElement().style.background = "#05070b";
     descriptionEditor.getWrapperElement().style.background = "#05070b";
     solutionEditor.getWrapperElement().style.background = "#05070b";
+    typeEditor.getWrapperElement().style.background = "#05070b";
 
     document.getElementById("create-form").addEventListener("submit", function (e) {
       nameEditor.save();
       descriptionEditor.save();
       solutionEditor.save();
+      typeEditor.save();
 
       const name = nameEditor.getValue().trim();
       const desc = descriptionEditor.getValue().trim();
+      const type = typeEditor.getValue().trim();
 
-      if (!name || !desc) {
+      if (!name || !desc || !type) {
         e.preventDefault();
-        alert("Fill in Problem Name and Problem Statement");
+        alert("Fill in Problem Name, Problem Type, and Problem Statement");
       }
     });
   </script>
