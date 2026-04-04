@@ -163,4 +163,23 @@ public class ProblemController {
     return "redirect:/dashboard";   
   }
 
+  @PostMapping("/problems/{problemID}/attempt")
+  public String recordAttempt(@PathVariable("problemID") int problemID, @RequestParam("result") String result, HttpServletRequest request) {
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user == null) return "redirect:/login";
+
+    Problem problem = problemRepository.findByProblemID(problemID).get(0);
+    if (problem == null) return "redirect:/error";
+
+    if (result.equals("correct")) {
+      problem.setCorrectAttempts(problem.getCorrectAttempts() + 1);
+    } else if (result.equals("incorrect")) {
+      problem.setIncorrectAttempts(problem.getIncorrectAttempts() + 1);
+    }
+
+    problemRepository.save(problem);
+
+    return "redirect:/problems/view/" + problemID;
+}
+
 }
