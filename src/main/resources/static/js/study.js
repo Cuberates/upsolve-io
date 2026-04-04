@@ -51,7 +51,7 @@ int main() {
             toggleText.textContent = "Hide Solution";
             toggleIcon.className = "bi bi-eye-slash";
             if (nextProblemGroup) nextProblemGroup.style.display = "flex";
-            if (attemptButtons) attemptButtons.style.display = "block";
+            if (attemptButtons) attemptButtons.style.display = "flex";
         } else {
             toggleText.textContent = "Show Solution";
             toggleIcon.className = "bi bi-eye";

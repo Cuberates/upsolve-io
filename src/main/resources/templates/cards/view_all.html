@@ -104,12 +104,11 @@
                                         </span>
                                         <span class="badge"
                                             th:classappend="
-                                                ${problem.correctAttempts + problem.incorrectAttempts == 0} ? 'bg-secondary' :
-                                                (${(problem.correctAttempts * 100.0) / (problem.correctAttempts + problem.incorrectAttempts) >= 75} ? 'bg-success' :
-                                                (${(problem.correctAttempts * 100.0) / (problem.correctAttempts + problem.incorrectAttempts) >= 50} ? 'bg-warning text-dark' : 'bg-danger'))
+                                                ${problem.accuracy == -1} ? 'bg-secondary' :
+                                                (${problem.accuracy >= 75} ? 'bg-success' :
+                                                (${problem.accuracy >= 50} ? 'bg-warning text-dark' : 'bg-danger'))
                                             "
-                                            th:text="${problem.correctAttempts + problem.incorrectAttempts == 0} ? 'N/A' : 
-                                                ${#numbers.formatDecimal((problem.correctAttempts * 100.0) / (problem.correctAttempts + problem.incorrectAttempts), 1, 2)} + '%'">
+                                            th:text="${problem.accuracy == -1} ? 'N/A' : ${#numbers.formatDecimal(problem.accuracy, 1, 2)} + '%'">
                                             N/A
                                         </span>
                                     </div>

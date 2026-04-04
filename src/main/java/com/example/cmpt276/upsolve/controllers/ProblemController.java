@@ -1,6 +1,7 @@
 package com.example.cmpt276.upsolve.controllers;
 
 import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,11 +28,20 @@ public class ProblemController {
     if (user == null) { return "redirect:/login"; }
     
     viewModel.addAttribute("user", user);
+    List<Problem> problems;
     if (user.getUserRole().equals("ADMIN")) {
-      viewModel.addAttribute("problems", problemRepository.findAll());
+        problems = problemRepository.findAll();
     } else {
-      viewModel.addAttribute("problems", problemRepository.findByUserID(user.getUserID()));
+        problems = problemRepository.findByUserID(user.getUserID());
     }
+
+    for (Problem problem : problems) {
+        int total = problem.getCorrectAttempts() + problem.getIncorrectAttempts();
+        double accuracy = (total == 0) ? -1 : (problem.getCorrectAttempts() * 100.0 / total);
+        problem.setAccuracy(accuracy); // you’ll need a transient field or setter in Problem.java
+    }
+
+    viewModel.addAttribute("problems", problems);
     
     return "cards/view_all";
   }
