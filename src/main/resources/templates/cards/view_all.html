@@ -95,6 +95,24 @@
                                         </span>
                                     </div>
                                 </div>
+                                    <div class="problem-stats" style="margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap;">
+                                        <span class="badge bg-success">
+                                            ✔ <span th:text="${problem.correctAttempts}">0</span>
+                                        </span>
+                                        <span class="badge bg-danger">
+                                            ✖ <span th:text="${problem.incorrectAttempts}">0</span>
+                                        </span>
+                                        <span class="badge"
+                                            th:classappend="
+                                                ${problem.correctAttempts + problem.incorrectAttempts == 0} ? 'bg-secondary' :
+                                                (${(problem.correctAttempts * 100.0) / (problem.correctAttempts + problem.incorrectAttempts) >= 75} ? 'bg-success' :
+                                                (${(problem.correctAttempts * 100.0) / (problem.correctAttempts + problem.incorrectAttempts) >= 50} ? 'bg-warning text-dark' : 'bg-danger'))
+                                            "
+                                            th:text="${problem.correctAttempts + problem.incorrectAttempts == 0} ? 'N/A' : 
+                                                ${#numbers.formatDecimal((problem.correctAttempts * 100.0) / (problem.correctAttempts + problem.incorrectAttempts), 1, 2)} + '%'">
+                                            N/A
+                                        </span>
+                                    </div>
                             </div>
                             <div class="problem-card-right">
                                 <a class="action-btn"
