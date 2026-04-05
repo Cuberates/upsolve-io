@@ -1,7 +1,7 @@
 package com.example.cmpt276.upsolve.controllers;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -191,5 +191,25 @@ public class ProblemController {
 
     return "redirect:/problems/view/" + problemID;
 }
+
+  @PostMapping("/problems/update/{problemID}/difficulty")
+  public String updateDifficulty(@PathVariable("problemID") int problemID, @RequestParam("problemDifficulty") int problemDifficulty, HttpServletRequest request) {
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user == null) { return "redirect:/login"; }
+
+    Problem problem = problemRepository.findByProblemID(problemID).get(0);
+    if (problem == null) { 
+      return "redirect:/error"; 
+    }
+
+    if (user.getUserRole().equals("USER") && (problem.getUserID() == null || !problem.getUserID().equals(user.getUserID()))) {
+      return "redirect:/problems";
+    }
+    
+    problem.setProblemDifficulty(problemDifficulty);
+    problemRepository.save(problem);
+
+    return "redirect:/problems/view/" + problemID;
+  }
 
 }
