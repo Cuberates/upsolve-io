@@ -103,7 +103,7 @@
                 </button>
 
 
-                <div id="attempt-buttons" style="display: none; margin-top: 15px; gap: 10px; flex-wrap: nowrap; display: flex;">
+                <div id="attempt-buttons" style="display: none; gap: 10px; flex-wrap: nowrap; display: flex;">
                     <form th:action="@{/problems/{id}/attempt(id=${problem.problemID})}" method="post" style="margin: 0; flex: 0 0 auto;">
                         <input type="hidden" name="result" value="correct"/>
                         <button type="submit" class="footer-action-btn correct-btn">
