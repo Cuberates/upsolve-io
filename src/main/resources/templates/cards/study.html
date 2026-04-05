@@ -120,22 +120,31 @@
                 </div>
                 
                 <div id="next-problem-group">
-                    <span id="next-problem-label">NEXT PROBLEM:</span>
+                    <span id="next-problem-label">RATE DIFFICULTY:</span>
 
-                    <a class="difficulty-next-btn easy" th:href="@{/problems}">
-                        <i class="bi bi-arrow-right"></i>
-                        <span>Easy</span>
-                    </a>
+                    <form method="post" th:action="@{/problems/update/{id}/difficulty(id=${problem.problemID})}">
+                        <input type="hidden" name="problemDifficulty" value="1" />
+                        <button type="submit" class="difficulty-next-btn easy">
+                            <i class="bi bi-check"></i>
+                            <span>Easy</span>
+                        </button>
+                    </form>
 
-                    <a class="difficulty-next-btn medium" th:href="@{/problems}">
-                        <i class="bi bi-arrow-right"></i>
-                        <span>Medium</span>
-                    </a>
+                    <form method="post" th:action="@{/problems/update/{id}/difficulty(id=${problem.problemID})}">
+                        <input type="hidden" name="problemDifficulty" value="2" />
+                        <button type="submit" class="difficulty-next-btn medium">
+                            <i class="bi bi-check"></i>
+                            <span>Medium</span>
+                        </button>
+                    </form>
 
-                    <a class="difficulty-next-btn hard" th:href="@{/problems}">
-                        <i class="bi bi-arrow-right"></i>
-                        <span>Hard</span>
-                    </a>
+                    <form method="post" th:action="@{/problems/update/{id}/difficulty(id=${problem.problemID})}">
+                        <input type="hidden" name="problemDifficulty" value="3" />
+                        <button type="submit" class="difficulty-next-btn hard">
+                            <i class="bi bi-check"></i>
+                            <span>Hard</span>
+                        </button>
+                    </form>
                 </div>
             </div>
 
