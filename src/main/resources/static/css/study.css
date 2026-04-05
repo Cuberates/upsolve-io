@@ -459,9 +459,9 @@ html, body {
 }
 
 #attempt-buttons .correct-btn {
-    background-color: #198754;
-    color: white;
-    border: none;
+    background-color: rgba(16,185,129,0.12); 
+    color: #6ee7b7;
+    border: 1px solid rgba(16,185,129,0.25);
 }
 
 #attempt-buttons .correct-btn:hover {
@@ -469,9 +469,9 @@ html, body {
 }
 
 #attempt-buttons .incorrect-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
+    background-color: rgba(239,68,68,0.12); 
+    color: #fca5a5;
+    border: 1px solid rgba(239,68,68,0.25);
 }
 
 #attempt-buttons .incorrect-btn:hover {
