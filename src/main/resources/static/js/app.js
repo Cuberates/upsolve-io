@@ -3,42 +3,72 @@ function togglePassword(inputId, button) {
       if (!input) return;
       input.type = input.type === 'password' ? 'text' : 'password';
       button.setAttribute('aria-pressed', input.type === 'text');
-    }
-
-function validateRegisterForm() {
-  const password = document.getElementById('userPassword');
-  const confirmPassword = document.getElementById('confirmPassword');
-  const error = document.getElementById('passwordMatchError');
-
-  if (!password || !confirmPassword || !error) return true;
-
-  if (password.value !== confirmPassword.value) {
-    error.style.display = 'block';
-    confirmPassword.focus();
-    return false;
   }
 
-  error.style.display = 'none';
-  return true;
-}
-
-document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('registerForm');
+  const email = document.getElementById('userEmail');
+  const confirmEmail = document.getElementById('confirmedUserEmail');
   const password = document.getElementById('userPassword');
-  const confirmPassword = document.getElementById('confirmPassword');
-  const error = document.getElementById('passwordMatchError');
+  const confirmPassword = document.getElementById('confirmedUserPassword');
 
-  if (password && confirmPassword && error) {
-    function checkPasswords() {
-      if (confirmPassword.value === '') {
-        error.style.display = 'none';
-      } else if (password.value !== confirmPassword.value) {
-        error.style.display = 'block';
-      } else {
-        error.style.display = 'none';
-      }
+  const emailError = document.getElementById('emailMatchError');
+  const passwordError = document.getElementById('passwordMatchError');
+
+  function validateEmailMatch() {
+    const emailValue = email.value.trim();
+    const confirmEmailValue = confirmEmail.value.trim();
+
+    if (confirmEmailValue === '') {
+      emailError.textContent = '';
+      confirmEmail.classList.remove('invalid');
+      return true;
     }
 
-    password.addEventListener('input', checkPasswords);
-    confirmPassword.addEventListener('input', checkPasswords);
+    if (emailValue !== confirmEmailValue) {
+      emailError.textContent = 'Emails do not match.';
+      confirmEmail.classList.add('invalid');
+      return false;
+    }
+
+    emailError.textContent = '';
+    confirmEmail.classList.remove('invalid');
+    return true;
   }
+
+  function validatePasswordMatch() {
+    const passwordValue = password.value;
+    const confirmPasswordValue = confirmPassword.value;
+
+    if (confirmPasswordValue === '') {
+      passwordError.textContent = '';
+      confirmPassword.classList.remove('invalid');
+      return true;
+    }
+
+    if (passwordValue !== confirmPasswordValue) {
+      passwordError.textContent = 'Passwords do not match.';
+      confirmPassword.classList.add('invalid');
+      return false;
+    }
+
+    passwordError.textContent = '';
+    confirmPassword.classList.remove('invalid');
+    return true;
+  }
+
+  confirmEmail.addEventListener('input', validateEmailMatch);
+  email.addEventListener('input', validateEmailMatch);
+
+  confirmPassword.addEventListener('input', validatePasswordMatch);
+  password.addEventListener('input', validatePasswordMatch);
+
+  form.addEventListener('submit', function (event) {
+    const isEmailValid = validateEmailMatch();
+    const isPasswordValid = validatePasswordMatch();
+
+    if (!isEmailValid || !isPasswordValid) {
+      event.preventDefault();
+    }
+  });
 });

@@ -113,6 +113,11 @@ body::before {
   margin-bottom: 24px;
 }
 
+.field.compact label {
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+
 .field label,
 .checkbox-row label {
   display: block;
@@ -120,6 +125,15 @@ body::before {
   font-weight: 700;
   margin-bottom: 12px;
   color: rgba(255,255,255,0.92);
+}
+
+.field-error {
+  min-height: 18px;
+  margin: 8px 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ff5b6e;
+  line-height: 1.3;
 }
 
 .input-wrap {
@@ -142,9 +156,13 @@ body::before {
   color: rgba(255, 255, 255, 0.72);
 }
 
-.input-wrap select {
- appearance: none;
- cursor: pointer;
+.input-wrap input:focus {
+  border-color: #74c9ff;
+  box-shadow: 0 0 0 3px rgba(116, 201, 255, 0.12);
+}
+
+.input-wrap input.invalid {
+  border-color: #ff5b6e;
 }
 
 .password-toggle {
