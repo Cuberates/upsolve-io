@@ -52,34 +52,6 @@
             </div>
           </div>
 
-          <div class="field compact">
-            <label for="securityQuestion">Security Question</label>
-            <div class="input-wrap">
-              <select id="securityQuestion" name="securityQuestion" required>
-                <option value="">Select a question</option>
-                <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
-                <option value="What was the name of your first pet?">What was the name of your first pet?</option>
-                <option value="What is the name of your favorite movie?">In what city were you born?</option>
-                <option value="favorite_teacher">Who was your favorite teacher?</option>
-                <option value="first_school">What was the name of your first school?</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="field compact">
-            <label for="securityAnswer">Security Answer</label>
-            <div class="input-wrap">
-              <input
-                type="text"
-                id="securityAnswer"
-                name="securityAnswer"
-                placeholder="Enter your security answer"
-                required
-              >
-            </div>
-          </div>
-
-
           <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red; margin-top:10px;"></p>
 
           <button type="submit" class="submit-btn">Login</button>

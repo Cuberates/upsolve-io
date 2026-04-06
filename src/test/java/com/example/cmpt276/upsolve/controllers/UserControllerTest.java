@@ -32,10 +32,10 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setup() {
-        regularUser = new User("user1", "email@domain.com", "pass1");
+        regularUser = new User("user1", "email@domain.com", "pass1", "What is your pet's name?", "Fluffy");
         regularUser.setUserRole("USER");
 
-        adminUser = new User("admin", "admin@domain.com", "adminpass");
+        adminUser = new User("admin", "admin@domain.com", "adminpass", "What is your favorite color?", "Blue");
         adminUser.setUserRole("ADMIN");
     }
 

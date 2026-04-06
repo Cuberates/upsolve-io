@@ -20,11 +20,13 @@ public class User {
   String securityAnswer; 
   
   public User() {}
-  public User(String userName, String userEmail, String userPassword) {
+  public User(String userName, String userEmail, String userPassword, String securityQuestion, String securityAnswer) {
     this.userName = userName;
     this.userEmail = userEmail; 
     this.userPassword = userPassword; 
     this.userRole = "USER"; 
+    this.securityQuestion = securityQuestion;
+    this.securityAnswer = securityAnswer;
   }
   public Integer getUserID() {
     return userID;
@@ -55,5 +57,17 @@ public class User {
   }
   public void setUserEmail(String userEmail) {
     this.userEmail = userEmail;
+  }
+  public String getSecurityQuestion() {
+    return securityQuestion;
+  }
+  public void setSecurityQuestion(String securityQuestion) {
+    this.securityQuestion = securityQuestion; 
+  }
+  public String getSecurityAnswer() {
+    return securityAnswer;
+  }
+  public void setSecurityAnswer(String securityAnswer) {
+    this.securityAnswer = securityAnswer;
   }
 } 

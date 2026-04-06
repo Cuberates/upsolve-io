@@ -36,6 +36,10 @@ public class UserController {
     String userPassword = registrationInfo.get("userPassword");
     String userEmail = registrationInfo.get("userEmail");
 
+    // Security question and answer for password recovery (not implemented in this demo, but stored for future use)
+    String securityQuestion = registrationInfo.get("securityQuestion");
+    String securityAnswer = registrationInfo.get("securityAnswer");
+
     String confirmedUserEmail = registrationInfo.get("confirmedUserEmail");
     String confirmedUserPassword = registrationInfo.get("confirmedUserPassword");
 
@@ -57,16 +61,16 @@ public class UserController {
       redirectAttributes.addFlashAttribute("errorMessage", "Passwords do not match! Please try again");
       return "redirect:/register";
     }
-    userRepository.save(new User(userName, userEmail, hashPassword(userPassword)));
+    userRepository.save(new User(userName, userEmail, hashPassword(userPassword), securityQuestion, securityAnswer));
     return "redirect:/login";
   }
 
   @PostMapping("/login")
   public String login(@RequestParam Map<String, String> loginInfo, RedirectAttributes redirectAttributes, Model model, HttpServletRequest request, HttpSession session) {
     String userName = loginInfo.get("userName");
-    String userPassword = loginInfo.get("userPassword");
+    String userPassword = hashPassword(loginInfo.get("userPassword"));
 
-    List<User> users = userRepository.findByUserNameAndUserPassword(userName, hashPassword(userPassword));
+    List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword);
 
     if (users.isEmpty()) { 
       redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password!"); 
@@ -77,11 +81,6 @@ public class UserController {
 
     if (!user.getUserPassword().equals(userPassword)) {
       redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password!"); 
-      return "redirect:/login"; 
-    }
-
-    if (!user.getSecurityQuestion().equals(securityQuestion) || !user.getSecurityAnswer().equals(securityAnswer)) {
-      redirectAttributes.addFlashAttribute("errorMessage", "Incorrect security question or answer!"); 
       return "redirect:/login"; 
     }
 
