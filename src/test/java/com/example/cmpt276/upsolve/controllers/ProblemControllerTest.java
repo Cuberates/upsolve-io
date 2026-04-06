@@ -133,7 +133,7 @@ public class ProblemControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard"));
 
-        Mockito.verify(problemRepository).save(Mockito.any(Problem.class)); // ✅ important
+        Mockito.verify(problemRepository).save(Mockito.any(Problem.class)); 
     }
 
     
