@@ -30,9 +30,8 @@
               >
             </div>
           </div>
-          
           <div class="field compact">
-            <label for="userEmail">Email Address</label>
+            <label for="userEmail">Email</label>
             <div class="input-wrap">
               <input
                 type="email"
@@ -43,8 +42,21 @@
                 required
               >
             </div>
-          </div>
+          </div>  
 
+          <div class="field compact">
+            <label for="confirmedUserEmail">Confirm Email</label>
+            <div class="input-wrap">
+              <input
+                type="email"
+                id="confirmedUserEmail"
+                name="confirmedUserEmail"
+                placeholder="Confirm your email"
+                autocomplete="email"
+                required
+              >
+          </div>
+          
           <div class="field">
             <label for="userPassword">Password</label>
             <div class="input-wrap">
@@ -67,55 +79,26 @@
           </div>
 
           <div class="field">
-            <label for="confirmPassword">Confirm Password</label>
+            <label for="confirmedUserPassword">Confirm Password</label>
             <div class="input-wrap">
               <input
                 type="password"
-                id="confirmPassword"
-                name="confirmPassword"
+                id="confirmedUserPassword"
+                name="confirmedUserPassword"
                 placeholder="Confirm your password"
                 autocomplete="new-password"
                 required
               >
-              <button class="password-toggle" type="button" aria-label="Show or hide password" onclick="togglePassword('confirmPassword', this)">
+              <button class="password-toggle" type="button" aria-label="Show or hide password" onclick="togglePassword('confirmedUserPassword', this)">
                 <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M3 3L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                   <path d="M10.58 10.58C10.21 10.95 10 11.46 10 12C10 13.1 10.9 14 12 14C12.54 14 13.05 13.79 13.42 13.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M9.88 5.09C10.56 4.86 11.27 4.75 12 4.75C17 4.75 20.27 9.11 21 12C20.73 13.07 20.08 14.3 19.1 15.42M14.12 18.91C13.44 19.14 12.73 19.25 12 19.25C7 19.25 3.73 14.89 3 １２C3.37 １０.５４ ４.３６ ８.８３ ５.８８ ７．４６" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M9.88 5.09C10.56 4.86 11.27 4.75 12 4.75C17 4.75 20.27 9.11 21 12C20.73 13.07 20.08 14.3 19.1 15.42M14.12 18.91C13.44 19.14 12.73 19.25 12 19.25C7 19.25 3.73 14.89 3 12C3.37 10.54 4.36 8.83 5.88 7.46" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-              </button> 
+              </button>
             </div>
           </div>
-
-          <p id="passwordMatchError" class="form-error" style="color:red; margin-top:10px; display:none;">Passwords do not match.</p>
-
-          <div class="field compact">
-            <label for="securityQuestion">Security Question</label>
-            <div class="input-wrap">
-              <select id="securityQuestion" name="securityQuestion" required>
-                <option value="">Select a question</option>
-                <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
-                <option value="What was the name of your first pet?">What was the name of your first pet?</option>
-                <option value="What is the name of your favorite movie?">In what city were you born?</option>
-                <option value="favorite_teacher">Who was your favorite teacher?</option>
-                <option value="first_school">What was the name of your first school?</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="field compact">
-            <label for="securityAnswer">Security Answer</label>
-            <div class="input-wrap">
-              <input
-                type="text"
-                id="securityAnswer"
-                name="securityAnswer"
-                placeholder="Enter your answer"
-                required
-              >
-            </div>
-          </div>
-
+          
           <button type="submit" class="submit-btn with-top-gap">Register</button>
 
           <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red; margin-top:10px;"></p>

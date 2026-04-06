@@ -19,6 +19,14 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
+  String hashPassword(String password) {
+    // Use Cesart cipher for password hashing (not secure, but sufficient for demonstration purposes)
+    StringBuilder hashed = new StringBuilder();
+    for (char c : password.toCharArray()) {
+      hashed.append((char) ((c + 3) % 256)); // Shift characters by 3 positions
+    }
+    return hashed.toString();
+  }
   @Autowired
   private UserRepository userRepository;
   
@@ -27,16 +35,29 @@ public class UserController {
     String userName = registrationInfo.get("userName");
     String userPassword = registrationInfo.get("userPassword");
     String userEmail = registrationInfo.get("userEmail");
-    String securityQuestion = registrationInfo.get("securityQuestion");
-    String securityAnswer = registrationInfo.get("securityAnswer");
 
+    String confirmedUserEmail = registrationInfo.get("confirmedUserEmail");
+    String confirmedUserPassword = registrationInfo.get("confirmedUserPassword");
+
+    // Handling invalid registration info
+    if (userName == null) { return "redirect:/register"; }   
     if (userRepository.findByUserName(userName).size() > 0) {
       redirectAttributes.addFlashAttribute("errorMessage", "Username already exists! Please choose another.");
       return "redirect:/register";
     }
 
-    User user = new User(userName, userPassword, userEmail, securityAnswer, securityQuestion);
-    userRepository.save(user);
+    if (userEmail == null) { return "redirect:/register"; }
+    if (!userEmail.equals(confirmedUserEmail)) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Emails do not match! Please try again");
+      return "redirect:/register";
+    }
+
+    if (userPassword == null) { return "redirect:/register"; }
+    if (!userPassword.equals(confirmedUserPassword)) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Passwords do not match! Please try again");
+      return "redirect:/register";
+    }
+    userRepository.save(new User(userName, userEmail, hashPassword(userPassword)));
     return "redirect:/login";
   }
 
@@ -44,10 +65,8 @@ public class UserController {
   public String login(@RequestParam Map<String, String> loginInfo, RedirectAttributes redirectAttributes, Model model, HttpServletRequest request, HttpSession session) {
     String userName = loginInfo.get("userName");
     String userPassword = loginInfo.get("userPassword");
-    String securityQuestion = loginInfo.get("securityQuestion");
-    String securityAnswer = loginInfo.get("securityAnswer");
- 
-    List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword);
+
+    List<User> users = userRepository.findByUserNameAndUserPassword(userName, hashPassword(userPassword));
 
     if (users.isEmpty()) { 
       redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password!"); 
