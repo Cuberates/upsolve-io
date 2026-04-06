@@ -140,7 +140,7 @@ body::before {
   position: relative;
 }
 
-.input-wrap input {
+.input-wrap input, .input-wrap select {
   width: 100%;
   height: 66px;
   border-radius: 7px;
@@ -223,6 +223,13 @@ body::before {
 .submit-btn:hover {
   background: var(--button-hover);
   transform: translateY(-1px);
+}
+
+.form-error {
+  color: #ff7b7b;
+  font-size: 14px;
+  margin-top: -16px;
+  margin-bottom: 18px;
 }
 
 .helper-links {

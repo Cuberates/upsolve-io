@@ -90,9 +90,9 @@ public class ProblemControllerTest {
                 .param("problemDescription", "Desc")
                 .param("problemSolution", "Solution")
                 .param("problemDifficulty", "3"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("create_card"))
-                .andExpect(model().attributeExists("errorMessage"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/create_card"))
+                .andExpect(flash().attributeExists("errorMessage"));
     }
 
     @Test

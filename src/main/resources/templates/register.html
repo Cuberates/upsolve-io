@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head> 
   <meta charset="UTF-8"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +16,7 @@
         <p class="welcome">Welcome !</p>
         <h1 class="title">Sign up</h1>
 
-         <form th:action="@{/register}" action="/register" method="post">
+         <form th:action="@{/register}" action="/register" method="post" onsubmit="return validateRegisterForm()">
           <div class="field compact">
             <label for="userName">Username</label>
             <div class="input-wrap">

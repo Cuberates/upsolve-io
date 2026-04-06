@@ -75,6 +75,16 @@ public class UserController {
 
     User user = users.get(0); 
 
+    if (!user.getUserPassword().equals(userPassword)) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password!"); 
+      return "redirect:/login"; 
+    }
+
+    if (!user.getSecurityQuestion().equals(securityQuestion) || !user.getSecurityAnswer().equals(securityAnswer)) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Incorrect security question or answer!"); 
+      return "redirect:/login"; 
+    }
+
     request.getSession().setAttribute("session_user", user);
     model.addAttribute("user", user);
 

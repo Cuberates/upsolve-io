@@ -15,7 +15,9 @@ public class User {
   String userName;
   String userEmail; 
   String userPassword;
-  String userRole; 
+  String userRole;
+  String securityQuestion;
+  String securityAnswer; 
   
   public User() {}
   public User(String userName, String userEmail, String userPassword) {
