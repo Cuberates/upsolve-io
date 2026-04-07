@@ -116,6 +116,77 @@ public class ProblemControllerTest {
                 .andExpect(redirectedUrl("/admin_dashboard"));
     }
 
+     @Test
+    public void testGetProblemsWithUser() throws Exception {
+        Mockito.when(problemRepository.findAll())
+               .thenReturn(Arrays.asList(new Problem()));
+
+        mockMvc.perform(get("/problems")
+                .sessionAttr("session_user", regularUser))
+                .andExpect(status().isOk())
+                .andExpect(view().name("cards/view_all"))
+                .andExpect(model().attributeExists("problems"));
+    }
+
+    @Test
+    public void testGetProblemsWithoutUser() throws Exception {
+        mockMvc.perform(get("/problems"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    public void testGetViewCardSuccess() throws Exception {
+        regularUser.setUserID(1);
+
+        Problem problem = new Problem();
+        problem.setProblemID(1);
+        problem.setUserID(1); // IMPORTANT
+
+        Mockito.when(problemRepository.findByProblemID(1))
+           .thenReturn(Arrays.asList(problem));
+
+        mockMvc.perform(get("/problems/view/1")
+            .sessionAttr("session_user", regularUser))
+            .andExpect(status().isOk())
+            .andExpect(view().name("cards/study"));
+    }   
+
+    @Test
+    public void testDeleteCardSuccess() throws Exception {
+        Problem problem = new Problem();
+        Mockito.when(problemRepository.findByProblemID(1))
+               .thenReturn(Arrays.asList(problem));
+
+        mockMvc.perform(post("/problems/delete/1")
+                .sessionAttr("session_user", regularUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/problems"));
+    }
+
+    @Test
+    public void testUpdateCardSuccess() throws Exception {
+        regularUser.setUserID(1);
+
+        Problem problem = new Problem();
+        problem.setProblemID(1);
+        problem.setUserID(1); 
+
+        Mockito.when(problemRepository.findByProblemID(1))
+           .thenReturn(Arrays.asList(problem));
+
+        mockMvc.perform(post("/problems/update/1")
+            .sessionAttr("session_user", regularUser)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .param("problemName", "Updated")
+            .param("problemDescription", "Updated")
+            .param("problemSolution", "Updated")
+            .param("problemDifficulty", "1")
+            .param("problemType", "Algo"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/dashboard"));
+    }
+
     @Test
     public void testCreateCardWithTag() throws Exception {
         MockHttpSession session = new MockHttpSession();
@@ -136,7 +207,6 @@ public class ProblemControllerTest {
 
         Mockito.verify(problemRepository).save(Mockito.any(Problem.class)); 
     }
-
     
     @Test
     public void testUpdateCardTagSuccess() throws Exception {
@@ -164,5 +234,213 @@ public class ProblemControllerTest {
         Mockito.verify(problemRepository).save(problem);
     }
 
+    @Test
+    public void testRecordCorrectAttempt() throws Exception {
+        regularUser.setUserID(1);
 
+        Problem problem = new Problem();
+        problem.setProblemID(1);
+        problem.setUserID(1);
+        problem.setCorrectAttempts(2);
+        problem.setIncorrectAttempts(1);
+
+        Mockito.when(problemRepository.findByProblemID(1))
+           .thenReturn(Arrays.asList(problem));
+
+        mockMvc.perform(post("/problems/1/attempt")
+            .sessionAttr("session_user", regularUser)
+            .param("result", "correct"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/problems/view/1"));
+
+        assert(problem.getCorrectAttempts() == 3);
+        assert(problem.getIncorrectAttempts() == 1);
+
+        Mockito.verify(problemRepository).save(problem);
+    }
+
+    @Test
+    public void testRecordIncorrectAttempt() throws Exception {
+        regularUser.setUserID(1);
+
+        Problem problem = new Problem();
+        problem.setProblemID(1);
+        problem.setUserID(1);
+        problem.setCorrectAttempts(2);
+        problem.setIncorrectAttempts(1);
+
+        Mockito.when(problemRepository.findByProblemID(1))
+           .thenReturn(Arrays.asList(problem));
+
+        mockMvc.perform(post("/problems/1/attempt")
+            .sessionAttr("session_user", regularUser)
+            .param("result", "incorrect"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/problems/view/1"));
+
+        assert(problem.getCorrectAttempts() == 2);
+        assert(problem.getIncorrectAttempts() == 2);
+
+        Mockito.verify(problemRepository).save(problem);
+    }
+
+    @Test
+    public void testRecordAttemptWithNullValues() throws Exception {
+        regularUser.setUserID(1);
+
+        Problem problem = new Problem();
+        problem.setProblemID(1);
+        problem.setUserID(1);
+        problem.setCorrectAttempts(null);
+        problem.setIncorrectAttempts(null);
+
+        Mockito.when(problemRepository.findByProblemID(1))
+           .thenReturn(Arrays.asList(problem));
+
+        mockMvc.perform(post("/problems/1/attempt")
+            .sessionAttr("session_user", regularUser)
+            .param("result", "correct"))
+            .andExpect(status().is3xxRedirection());
+
+        assert(problem.getCorrectAttempts() == 1);
+        assert(problem.getIncorrectAttempts() == 0);
+    }
+
+    @Test
+    public void testRecordAttemptInvalidResult() throws Exception {
+        regularUser.setUserID(1);
+
+        Problem problem = new Problem();
+        problem.setProblemID(1);
+        problem.setUserID(1);
+        problem.setCorrectAttempts(1);
+        problem.setIncorrectAttempts(1);
+
+        Mockito.when(problemRepository.findByProblemID(1))
+           .thenReturn(Arrays.asList(problem));
+
+        mockMvc.perform(post("/problems/1/attempt")
+            .sessionAttr("session_user", regularUser)
+            .param("result", "invalid"))
+            .andExpect(status().is3xxRedirection());
+
+        assert(problem.getCorrectAttempts() == 1);
+        assert(problem.getIncorrectAttempts() == 1);
+    }
+
+    @Test
+    public void testRecordAttemptNoUser() throws Exception {
+        mockMvc.perform(post("/problems/1/attempt")
+            .param("result", "correct"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    public void testAccuracyCalculationNormal() throws Exception {
+        regularUser.setUserID(1);
+
+        Problem problem = new Problem();
+        problem.setProblemID(1);
+        problem.setUserID(1);
+        problem.setCorrectAttempts(3);
+        problem.setIncorrectAttempts(1);
+
+        Mockito.when(problemRepository.findByUserID(1))
+           .thenReturn(Arrays.asList(problem));
+
+        mockMvc.perform(get("/problems")
+            .sessionAttr("session_user", regularUser))
+            .andExpect(status().isOk())
+            .andExpect(view().name("cards/view_all"))
+            .andExpect(model().attributeExists("problems"));
+
+        assert(problem.getAccuracy() == 75.0);
+    }
+
+    @Test
+    public void testAccuracyZeroAttempts() throws Exception {
+        regularUser.setUserID(1);
+
+        Problem problem = new Problem();
+        problem.setProblemID(1);
+        problem.setUserID(1);
+        problem.setCorrectAttempts(0);
+        problem.setIncorrectAttempts(0);
+
+        Mockito.when(problemRepository.findByUserID(1))
+           .thenReturn(Arrays.asList(problem));
+
+        mockMvc.perform(get("/problems")
+            .sessionAttr("session_user", regularUser))
+            .andExpect(status().isOk());
+
+        assert(problem.getAccuracy() == -1);
+    } 
+
+    @Test
+    public void testAccuracyWithNullAttempts() throws Exception {
+        regularUser.setUserID(1);
+
+        Problem problem = new Problem();
+        problem.setProblemID(1);
+        problem.setUserID(1);
+        problem.setCorrectAttempts(null);
+        problem.setIncorrectAttempts(null);
+
+        Mockito.when(problemRepository.findByUserID(1))
+           .thenReturn(Arrays.asList(problem));
+
+        mockMvc.perform(get("/problems")
+            .sessionAttr("session_user", regularUser))
+            .andExpect(status().isOk());
+
+        assert(problem.getAccuracy() == -1);
+    }
+
+    @Test
+    public void testAccuracyMultipleProblems() throws Exception {
+        regularUser.setUserID(1);
+
+        Problem p1 = new Problem();
+        p1.setUserID(1);
+        p1.setCorrectAttempts(2);
+        p1.setIncorrectAttempts(2); 
+
+        Problem p2 = new Problem();
+        p2.setUserID(1);
+        p2.setCorrectAttempts(1);
+        p2.setIncorrectAttempts(0);
+
+        Mockito.when(problemRepository.findByUserID(1))
+           .thenReturn(Arrays.asList(p1, p2));
+
+        mockMvc.perform(get("/problems")
+            .sessionAttr("session_user", regularUser))
+            .andExpect(status().isOk());
+
+        assert(p1.getAccuracy() == 50.0);
+        assert(p2.getAccuracy() == 100.0);
+    }
+
+    @Test
+    public void testAccuracyAdminUsesFindAll() throws Exception {
+        adminUser.setUserID(99);
+
+        Problem problem = new Problem();
+        problem.setCorrectAttempts(4);
+        problem.setIncorrectAttempts(1); 
+
+        Mockito.when(problemRepository.findAll())
+           .thenReturn(Arrays.asList(problem));
+
+        mockMvc.perform(get("/problems")
+            .sessionAttr("session_user", adminUser))
+            .andExpect(status().isOk());
+
+        assert(problem.getAccuracy() == 80.0);
+    }
+
+    
 }
+
