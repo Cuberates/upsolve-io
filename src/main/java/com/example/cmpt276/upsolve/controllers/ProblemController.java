@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.cmpt276.upsolve.models.Problem;
 import com.example.cmpt276.upsolve.models.ProblemRepository;
+import com.example.cmpt276.upsolve.models.StudySession;
+import com.example.cmpt276.upsolve.models.StudySessionRepository;
 import com.example.cmpt276.upsolve.models.User;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +24,8 @@ import jakarta.servlet.http.HttpServletRequest;
 public class ProblemController {
   @Autowired
   private ProblemRepository problemRepository;
+  @Autowired
+  private StudySessionRepository studySessionRepository;
 
   @GetMapping("/problems")
   public String getProblems(Model viewModel, HttpServletRequest request) {  
@@ -39,6 +44,14 @@ public class ProblemController {
         int total = problem.getCorrectAttempts() + problem.getIncorrectAttempts();
         double accuracy = (total == 0) ? -1 : (problem.getCorrectAttempts() * 100.0 / total);
         problem.setAccuracy(accuracy); // you’ll need a transient field or setter in Problem.java
+
+        List<StudySession> sessions = studySessionRepository.findByUserIDAndProblemID(user.getUserID(), problem.getProblemID());
+
+        long totalTime = sessions.stream()
+          .mapToLong(StudySession::getDurationMillis)
+          .sum();
+
+        problem.setTotalTimeMillis(totalTime);
     }
 
     viewModel.addAttribute("problems", problems);
@@ -214,5 +227,21 @@ public class ProblemController {
 
     return "redirect:/problems/view/" + problemID;
   }
+
+  @GetMapping("/problems/{problemID}/time")
+  @ResponseBody
+  public void recordStudyTime(@PathVariable int problemID, @RequestParam long duration, HttpServletRequest request) {
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user == null) return;
+
+    StudySession session = new StudySession(
+        user.getUserID(),
+        problemID,
+        duration
+    );
+
+    studySessionRepository.save(session);
+  }
+
 
 }

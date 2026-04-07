@@ -28,6 +28,9 @@ public class Problem {
     @Transient
     double accuracy;
     
+    @Transient
+    long totalTimeMillis;
+
     public Problem() {}
     public Problem(String problemName, String problemDescription, String problemSolution, int problemDifficulty, String problemType) {
         this.problemName = problemName;
@@ -102,5 +105,11 @@ public class Problem {
     }
     public void setAccuracy(double accuracy) {
         this.accuracy = accuracy;
+    }
+    public long getTotalTimeMillis() {
+        return totalTimeMillis;
+    }
+    public void setTotalTimeMillis(long totalTimeMillis) {
+        this.totalTimeMillis = totalTimeMillis;
     }
 }
