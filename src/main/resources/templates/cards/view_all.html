@@ -89,8 +89,29 @@
                                               th:text="${problem.problemDifficulty == 1} ? 'Easy' : (${problem.problemDifficulty == 2} ? 'Medium' : 'Hard')">
                                             Easy
                                         </span>
+                                        <span class="problem-tag tag-type"
+                                            th:text="${problem.problemType != null and !#strings.isEmpty(problem.problemType)} ? ${problem.problemType} : 'General'">
+                                            General
+                                        </span>
                                     </div>
                                 </div>
+                                    <div class="problem-stats" style="margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap;">
+                                        <span class="badge bg-success">
+                                            ✔ <span th:text="${problem.correctAttempts}">0</span>
+                                        </span>
+                                        <span class="badge bg-danger">
+                                            ✖ <span th:text="${problem.incorrectAttempts}">0</span>
+                                        </span>
+                                        <span class="badge"
+                                            th:classappend="
+                                                ${problem.accuracy == -1} ? 'bg-secondary' :
+                                                (${problem.accuracy >= 75} ? 'bg-success' :
+                                                (${problem.accuracy >= 50} ? 'bg-warning text-dark' : 'bg-danger'))
+                                            "
+                                            th:text="${problem.accuracy == -1} ? 'N/A' : ${#numbers.formatDecimal(problem.accuracy, 1, 2)} + '%'">
+                                            N/A
+                                        </span>
+                                    </div>
                             </div>
                             <div class="problem-card-right">
                                 <a class="action-btn"

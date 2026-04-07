@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const toggleIcon = toggleBtn ? toggleBtn.querySelector("i") : null;
     const codeTextarea = document.getElementById("studyCode");
     const nextProblemGroup = document.getElementById("next-problem-group");
+    const attemptButtons = document.getElementById("attempt-buttons");
 
     let editor = null;
 
@@ -50,10 +51,12 @@ int main() {
             toggleText.textContent = "Hide Solution";
             toggleIcon.className = "bi bi-eye-slash";
             if (nextProblemGroup) nextProblemGroup.style.display = "flex";
+            if (attemptButtons) attemptButtons.style.display = "flex";
         } else {
             toggleText.textContent = "Show Solution";
             toggleIcon.className = "bi bi-eye";
             if (nextProblemGroup) nextProblemGroup.style.display = "none";
+            if (attemptButtons) attemptButtons.style.display = "none";
         }
 
         if (editor) {

@@ -102,13 +102,17 @@
                         <table id="users-table" class="w-100">
                             <thead id="users-table-head">
                                 <tr>
+                                    <th id="col-id">ID</th>
                                     <th id="col-username">Username</th>
+                                    <th id="col-email">Email</th>
                                     <th id="col-role">Role</th>
                                 </tr>
                             </thead>
                             <tbody id="users-table-body">
                                 <tr class="user-row" th:each="u : ${users}">
+                                    <td th:text="${u.userID}">1</td>
                                     <td class="user-name-cell" th:text="${u.userName}">username</td>
+                                    <td th:text="${u.userEmail}">email@example.com</td>
                                     <td>
                                         <span class="role-badge"
                                               th:classappend="${u.userRole == 'ADMIN'} ? 'badge-admin' : 'badge-user'"
