@@ -190,7 +190,10 @@ public class ProblemController {
   }
 
   @PostMapping("/problems/{problemID}/attempt")
-  public String recordAttempt(@PathVariable("problemID") int problemID, @RequestParam("result") String result, HttpServletRequest request) {
+  public String recordAttempt(@PathVariable("problemID") int problemID,
+                               @RequestParam("result") String result,
+                               @RequestParam(value = "duration", defaultValue = "0") long duration,
+                               HttpServletRequest request) {
     User user = (User) request.getSession().getAttribute("session_user");
     if (user == null) return "redirect:/login";
 
@@ -204,6 +207,10 @@ public class ProblemController {
     }
 
     problemRepository.save(problem);
+
+    if (duration > 1000) {
+      studySessionRepository.save(new StudySession(user.getUserID(), problemID, duration)); // Save study time in the same request
+    }
 
     return "redirect:/problems/view/" + problemID;
 }

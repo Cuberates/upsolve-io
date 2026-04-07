@@ -106,6 +106,7 @@
                 <div id="attempt-buttons" style="display: none; gap: 10px; flex-wrap: nowrap; display: flex;">
                     <form th:action="@{/problems/{id}/attempt(id=${problem.problemID})}" method="post" style="margin: 0; flex: 0 0 auto;">
                         <input type="hidden" name="result" value="correct"/>
+                        <input type="hidden" name="duration" value="0" class="duration-input"/>
                         <button type="submit" class="footer-action-btn correct-btn">
                             Correct
                         </button>
@@ -113,6 +114,7 @@
 
                     <form th:action="@{/problems/{id}/attempt(id=${problem.problemID})}" method="post" style="margin: 0; flex: 0 0 auto;">
                         <input type="hidden" name="result" value="incorrect"/>
+                        <input type="hidden" name="duration" value="0" class="duration-input"/>
                         <button type="submit" class="footer-action-btn incorrect-btn">
                             Incorrect
                         </button>
@@ -204,14 +206,13 @@
 
     let isActive = true;
     let lastStart = Date.now();
-    let accumulatedTime = 0; 
-    let sentOnUnload = false;
+    let accumulatedTime = 0;
 
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
             if (isActive) {
-            accumulatedTime += Date.now() - lastStart;
-            isActive = false;
+                accumulatedTime += Date.now() - lastStart;
+                isActive = false;
             }
         } else {
             lastStart = Date.now();
@@ -219,45 +220,41 @@
         }
     });
 
-    setInterval(() => {
-        if (!isActive) return;
+    function getCurrentAccumulated() {
+        return accumulatedTime + (isActive ? (Date.now() - lastStart) : 0);
+    }
 
-        const now = Date.now();
-        accumulatedTime += now - lastStart;
-        lastStart = now;
+    // On attempt (Correct / Incorrect): write elapsed time into the form's hidden
+    // duration field so it gets submitted in the same POST — no race condition.
+    document.querySelectorAll("#attempt-buttons form").forEach(form => {
+        form.addEventListener("submit", function() {
+            const elapsed = getCurrentAccumulated();
+            form.querySelector(".duration-input").value = Math.round(elapsed);
 
-        if (accumulatedTime < 3000) return;
-
-        sendTimeToServer(accumulatedTime);
-        accumulatedTime = 0;
-
-    }, 15000); 
-
-
-    function sendTimeToServer(duration) {
-        logEvent(analytics, "study_time", {
-            problem_id: problemID,
-            duration_ms: duration
+            logEvent(analytics, "study_time", {
+                problem_id: problemID,
+                duration_ms: elapsed
+            });
         });
+    });
 
-        navigator.sendBeacon( "/problems/" + problemID + "/time", new URLSearchParams({ duration: duration }));
-    }
-
-    function sendFinalTime() {
-        if (sentOnUnload) return;
-        sentOnUnload = true;
-
-        if (isActive) {
-            accumulatedTime += Date.now() - lastStart;
+    // On back button: send via beacon (best-effort, no redirect dependency)
+    document.getElementById("btn-back").addEventListener("click", () => {
+        const elapsed = getCurrentAccumulated();
+        if (elapsed > 1000) {
+            navigator.sendBeacon("/problems/" + problemID + "/time",
+                new URLSearchParams({ duration: Math.round(elapsed) }));
         }
+    });
 
-        if (accumulatedTime > 0) {
-            sendTimeToServer(accumulatedTime);
+    // Tab close / navigate away fallback
+    window.addEventListener("beforeunload", () => {
+        const elapsed = getCurrentAccumulated();
+        if (elapsed > 1000) {
+            navigator.sendBeacon("/problems/" + problemID + "/time",
+                new URLSearchParams({ duration: Math.round(elapsed) }));
         }
-    }
-
-    window.addEventListener("beforeunload", sendFinalTime);
-    document.getElementById("btn-back").addEventListener("click", sendFinalTime);
+    });
 </script>
 </body>
 </html>
