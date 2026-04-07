@@ -19,6 +19,14 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
+  String hashPassword(String password) {
+    // Use Cesart cipher for password hashing (not secure, but sufficient for demonstration purposes)
+    StringBuilder hashed = new StringBuilder();
+    for (char c : password.toCharArray()) {
+      hashed.append((char) ((c + 3) % 256)); // Shift characters by 3 positions
+    }
+    return hashed.toString();
+  }
   @Autowired
   private UserRepository userRepository;
   
@@ -26,20 +34,42 @@ public class UserController {
   public String registerUser(@RequestParam Map<String, String> registrationInfo, RedirectAttributes redirectAttributes, Model model) {
     String userName = registrationInfo.get("userName");
     String userPassword = registrationInfo.get("userPassword");
+    String userEmail = registrationInfo.get("userEmail");
 
+    // Security question and answer for password recovery (not implemented in this demo, but stored for future use)
+    String securityQuestion = registrationInfo.get("securityQuestion");
+    String securityAnswer = registrationInfo.get("securityAnswer");
+
+    String confirmedUserEmail = registrationInfo.get("confirmedUserEmail");
+    String confirmedUserPassword = registrationInfo.get("confirmedUserPassword");
+
+    // Handling invalid registration info
+    if (userName == null) { return "redirect:/register"; }   
     if (userRepository.findByUserName(userName).size() > 0) {
       redirectAttributes.addFlashAttribute("errorMessage", "Username already exists! Please choose another.");
       return "redirect:/register";
     }
-    userRepository.save(new User(userName, userPassword));
+
+    if (userEmail == null) { return "redirect:/register"; }
+    if (!userEmail.equals(confirmedUserEmail)) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Emails do not match! Please try again");
+      return "redirect:/register";
+    }
+
+    if (userPassword == null) { return "redirect:/register"; }
+    if (!userPassword.equals(confirmedUserPassword)) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Passwords do not match! Please try again");
+      return "redirect:/register";
+    }
+    userRepository.save(new User(userName, userEmail, hashPassword(userPassword), securityQuestion, securityAnswer));
     return "redirect:/login";
   }
 
   @PostMapping("/login")
   public String login(@RequestParam Map<String, String> loginInfo, RedirectAttributes redirectAttributes, Model model, HttpServletRequest request, HttpSession session) {
     String userName = loginInfo.get("userName");
-    String userPassword = loginInfo.get("userPassword");
- 
+    String userPassword = hashPassword(loginInfo.get("userPassword"));
+
     List<User> users = userRepository.findByUserNameAndUserPassword(userName, userPassword);
 
     if (users.isEmpty()) { 
@@ -48,6 +78,11 @@ public class UserController {
     }
 
     User user = users.get(0); 
+
+    if (!user.getUserPassword().equals(userPassword)) {
+      redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password!"); 
+      return "redirect:/login"; 
+    }
 
     request.getSession().setAttribute("session_user", user);
     model.addAttribute("user", user);
