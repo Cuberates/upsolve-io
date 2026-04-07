@@ -89,6 +89,10 @@
                                               th:text="${problem.problemDifficulty == 1} ? 'Easy' : (${problem.problemDifficulty == 2} ? 'Medium' : 'Hard')">
                                             Easy
                                         </span>
+                                        <span class="problem-tag tag-type"
+                                            th:text="${problem.problemType != null and !#strings.isEmpty(problem.problemType)} ? ${problem.problemType} : 'General'">
+                                            General
+                                        </span>
                                     </div>
                                 </div>
                             </div>

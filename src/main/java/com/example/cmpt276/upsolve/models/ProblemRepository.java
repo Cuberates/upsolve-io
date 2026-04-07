@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface ProblemRepository extends JpaRepository<Problem, Integer> {
   List<Problem> findByProblemName(String problemName);
   List<Problem> findByProblemID(Integer problemID);
+  List<Problem> findByUserID(Integer userID);
 } 

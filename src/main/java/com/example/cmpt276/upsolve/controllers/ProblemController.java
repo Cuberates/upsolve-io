@@ -27,7 +27,11 @@ public class ProblemController {
     if (user == null) { return "redirect:/login"; }
     
     viewModel.addAttribute("user", user);
-    viewModel.addAttribute("problems", problemRepository.findAll());
+    if (user.getUserRole().equals("ADMIN")) {
+      viewModel.addAttribute("problems", problemRepository.findAll());
+    } else {
+      viewModel.addAttribute("problems", problemRepository.findByUserID(user.getUserID()));
+    }
     
     return "cards/view_all";
   }
@@ -42,6 +46,8 @@ public class ProblemController {
     if (user.getUserRole().equals("USER") && !problem.getUserID().equals(user.getUserID())) {
       return "redirect:/problems";
     }
+    problem.setStudied(true);
+    problemRepository.save(problem);
     
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problem", problem);
@@ -65,6 +71,10 @@ public class ProblemController {
     Problem problem = problemRepository.findByProblemID(problemID).get(0);
     if (problem == null) { return "redirect:/error"; } 
 
+    if (user.getUserRole().equals("USER") && (problem.getUserID() == null || !problem.getUserID().equals(user.getUserID()))) {
+      return "redirect:/problems";
+    }
+
     viewModel.addAttribute("user", user);
     viewModel.addAttribute("problem", problem);
     return "cards/update";
@@ -80,6 +90,7 @@ public class ProblemController {
     String problemName = problemInfo.get("problemName");
     String problemDescription = problemInfo.get("problemDescription");
     String problemSolution = problemInfo.get("problemSolution");
+    String problemType = problemInfo.get("problemType");
     int problemDifficulty = Integer.parseInt(problemInfo.get("problemDifficulty"));
 
     if (problemRepository.findByProblemName(problemName).size() > 0) {
@@ -87,7 +98,9 @@ public class ProblemController {
       viewModel.addAttribute("errorMessage", "Problem already exists!");
       return "cards/create";
     }
-    problemRepository.save(new Problem(problemName, problemDescription, problemSolution, problemDifficulty));
+    Problem newProblem = new Problem(problemName, problemDescription, problemSolution, problemDifficulty, problemType);
+    newProblem.setUserID(user.getUserID());
+    problemRepository.save(newProblem);
     if (user.getUserRole().equals("ADMIN")) {
       return "redirect:/admin_dashboard";
     }
@@ -105,6 +118,11 @@ public class ProblemController {
     if (problem == null) { 
       return "redirect:/error"; // This is not supposed to happen since we are not querying for the problem ID;
     }
+
+    if (user.getUserRole().equals("USER") && (problem.getUserID() == null || !problem.getUserID().equals(user.getUserID()))) {
+      return "redirect:/problems";
+    }
+    
     problemRepository.delete(problem);
     if (user.getUserRole().equals("ADMIN")) {
       return "redirect:/problems";
@@ -129,10 +147,15 @@ public class ProblemController {
     if (problem == null) { 
       return "redirect:/error"; // This is not supposed to happen since we are not querying for the problem ID;
     }
+
+    if (user.getUserRole().equals("USER") && (problem.getUserID() == null || !problem.getUserID().equals(user.getUserID()))) {
+      return "redirect:/problems";
+    }
     problem.setProblemName(problemInfo.get("problemName"));
     problem.setProblemDescription(problemInfo.get("problemDescription"));
     problem.setProblemSolution(problemInfo.get("problemSolution"));
     problem.setProblemDifficulty(Integer.parseInt(problemInfo.get("problemDifficulty")));
+    problem.setProblemType(problemInfo.get("problemType"));
     problemRepository.save(problem);
     if (user.getUserRole().equals("ADMIN")) {
       return "redirect:/admin_dashboard";

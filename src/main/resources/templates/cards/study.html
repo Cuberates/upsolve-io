@@ -51,6 +51,10 @@
                               th:text="${problem.problemDifficulty == 1} ? 'Easy' : (${problem.problemDifficulty == 2} ? 'Medium' : 'Hard')">
                             Medium
                         </span>
+                        <span class="difficulty-pill type-pill"
+                            th:text="${problem.problemType != null and !#strings.isEmpty(problem.problemType)} ? ${problem.problemType} : 'General'">
+                            General
+                        </span>
                     </div>
 
                     <p id="problem-subtitle">Read the problem carefully before writing your solution</p>
