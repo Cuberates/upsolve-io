@@ -1,5 +1,6 @@
 package com.example.cmpt276.upsolve.controllers;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,20 @@ public class ProblemController {
     if (user == null) { return "redirect:/login"; }
     
     viewModel.addAttribute("user", user);
+    List<Problem> problems;
     if (user.getUserRole().equals("ADMIN")) {
-      viewModel.addAttribute("problems", problemRepository.findAll());
+        problems = problemRepository.findAll();
     } else {
-      viewModel.addAttribute("problems", problemRepository.findByUserID(user.getUserID()));
+        problems = problemRepository.findByUserID(user.getUserID());
     }
+
+    for (Problem problem : problems) {
+        int total = problem.getCorrectAttempts() + problem.getIncorrectAttempts();
+        double accuracy = (total == 0) ? -1 : (problem.getCorrectAttempts() * 100.0 / total);
+        problem.setAccuracy(accuracy); // you’ll need a transient field or setter in Problem.java
+    }
+
+    viewModel.addAttribute("problems", problems);
     
     return "cards/view_all";
   }
@@ -164,6 +174,45 @@ public class ProblemController {
       return "redirect:/admin_dashboard";
     }
     return "redirect:/dashboard";   
+  }
+
+  @PostMapping("/problems/{problemID}/attempt")
+  public String recordAttempt(@PathVariable("problemID") int problemID, @RequestParam("result") String result, HttpServletRequest request) {
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user == null) return "redirect:/login";
+
+    Problem problem = problemRepository.findByProblemID(problemID).get(0);
+    if (problem == null) return "redirect:/error";
+
+    if (result.equals("correct")) {
+      problem.setCorrectAttempts(problem.getCorrectAttempts() + 1);
+    } else if (result.equals("incorrect")) {
+      problem.setIncorrectAttempts(problem.getIncorrectAttempts() + 1);
+    }
+
+    problemRepository.save(problem);
+
+    return "redirect:/problems/view/" + problemID;
+}
+
+  @PostMapping("/problems/update/{problemID}/difficulty")
+  public String updateDifficulty(@PathVariable("problemID") int problemID, @RequestParam("problemDifficulty") int problemDifficulty, HttpServletRequest request) {
+    User user = (User) request.getSession().getAttribute("session_user");
+    if (user == null) { return "redirect:/login"; }
+
+    Problem problem = problemRepository.findByProblemID(problemID).get(0);
+    if (problem == null) { 
+      return "redirect:/error"; 
+    }
+
+    if (user.getUserRole().equals("USER") && (problem.getUserID() == null || !problem.getUserID().equals(user.getUserID()))) {
+      return "redirect:/problems";
+    }
+    
+    problem.setProblemDifficulty(problemDifficulty);
+    problemRepository.save(problem);
+
+    return "redirect:/problems/view/" + problemID;
   }
 
 }

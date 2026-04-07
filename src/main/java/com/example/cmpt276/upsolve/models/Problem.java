@@ -1,9 +1,11 @@
 package com.example.cmpt276.upsolve.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Table(name="problems")
 @Entity
@@ -18,6 +20,13 @@ public class Problem {
     String problemType;
     int problemDifficulty;
     boolean studied = false;
+    @Column(name="correctAttempts")
+    Integer correctAttempts;
+    @Column(name="incorrectAttempts")
+    Integer incorrectAttempts;
+
+    @Transient
+    double accuracy;
     
     public Problem() {}
     public Problem(String problemName, String problemDescription, String problemSolution, int problemDifficulty, String problemType) {
@@ -75,5 +84,23 @@ public class Problem {
     }
     public void setProblemType(String problemType) {
         this.problemType = problemType;
+    }
+    public Integer getCorrectAttempts() {
+        return correctAttempts != null ? correctAttempts : 0;
+    }
+    public void setCorrectAttempts(Integer correctAttempts) {
+        this.correctAttempts = correctAttempts;
+    }
+    public Integer getIncorrectAttempts() {
+        return incorrectAttempts != null ? incorrectAttempts : 0;
+    }
+    public void setIncorrectAttempts(Integer incorrectAttempts) {
+        this.incorrectAttempts = incorrectAttempts;
+    }
+    public double getAccuracy() {
+        return accuracy;
+    }
+    public void setAccuracy(double accuracy) {
+        this.accuracy = accuracy;
     }
 }

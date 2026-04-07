@@ -45,7 +45,7 @@ public class UserControllerTest {
         Mockito.when(userRepository.findByUserNameAndUserPassword("user1", "pass1")).thenReturn(Arrays.asList(regularUser));
 
         mockMvc.perform(post("/login")
-                .contentType(MediaType.valueOf("application/x-www-form-urlencoded"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("userName", "user1")
                 .param("userPassword", "pass1")
                 .param("securityAnswer", "Fluffy")
@@ -59,7 +59,7 @@ public class UserControllerTest {
         Mockito.when(userRepository.findByUserNameAndUserPassword("admin", "adminpass")).thenReturn(Arrays.asList(adminUser));
 
         mockMvc.perform(post("/login")
-                .contentType(MediaType.valueOf("application/x-www-form-urlencoded"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("userName", "admin")
                 .param("userPassword", "adminpass")
                 .param("securityAnswer", "Blue")
@@ -88,7 +88,7 @@ public class UserControllerTest {
         Mockito.when(userRepository.findByUserNameAndUserPassword("user1", "wrongpass")).thenReturn(Arrays.asList());
 
         mockMvc.perform(post("/login")
-                .contentType(MediaType.valueOf("application/x-www-form-urlencoded"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("userName", "user1")
                 .param("userPassword", "wrongpass")
                 .param("securityAnswer", "Fluffy")
@@ -115,10 +115,11 @@ public class UserControllerTest {
 
     @Test
     public void testRegisterSuccess() throws Exception {
-        Mockito.when(userRepository.findByUserName("newuser")).thenReturn(Arrays.asList());
+        Mockito.when(userRepository.findByUserName("newuser"))
+               .thenReturn(Arrays.asList());
 
         mockMvc.perform(post("/register")
-                .contentType(MediaType.valueOf("application/x-www-form-urlencoded"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("userName", "newuser")
                 .param("userPassword", "newpass")
                 .param("userEmail", "newuser@example.com")
@@ -129,11 +130,12 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testRegisterDuplicateUsername() throws Exception {
-        Mockito.when(userRepository.findByUserName("user1")).thenReturn(Arrays.asList(regularUser));
+    public void testRegisterDuplicate() throws Exception {
+        Mockito.when(userRepository.findByUserName("user1"))
+               .thenReturn(Arrays.asList(regularUser));
 
         mockMvc.perform(post("/register")
-                .contentType(MediaType.valueOf("application/x-www-form-urlencoded"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("userName", "user1")
                 .param("userPassword", "pass1")
                 .param("userEmail", "user1@test.com")

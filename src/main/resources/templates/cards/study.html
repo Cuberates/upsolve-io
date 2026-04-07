@@ -88,9 +88,10 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
-            <div id="left-footer">
+          <div id="left-footer">
                 <a id="btn-back" th:href="@{/problems}" href="/problems">
                     <i class="bi bi-arrow-left"></i>
                     <span>Back</span>
@@ -100,26 +101,53 @@
                     <i class="bi bi-eye"></i>
                     <span th:text="${showSolution} ? 'Hide Solution' : 'Show Solution'">Show Solution</span>
                 </button>
+
+
+                <div id="attempt-buttons" style="display: none; gap: 10px; flex-wrap: nowrap; display: flex;">
+                    <form th:action="@{/problems/{id}/attempt(id=${problem.problemID})}" method="post" style="margin: 0; flex: 0 0 auto;">
+                        <input type="hidden" name="result" value="correct"/>
+                        <button type="submit" class="footer-action-btn correct-btn">
+                            Correct
+                        </button>
+                    </form>
+
+                    <form th:action="@{/problems/{id}/attempt(id=${problem.problemID})}" method="post" style="margin: 0; flex: 0 0 auto;">
+                        <input type="hidden" name="result" value="incorrect"/>
+                        <button type="submit" class="footer-action-btn incorrect-btn">
+                            Incorrect
+                        </button>
+                    </form>
+                </div>
                 
                 <div id="next-problem-group">
-                    <span id="next-problem-label">NEXT PROBLEM:</span>
+                    <span id="next-problem-label">RATE DIFFICULTY:</span>
 
-                    <a class="difficulty-next-btn easy" th:href="@{/problems}">
-                        <i class="bi bi-arrow-right"></i>
-                        <span>Easy</span>
-                    </a>
+                    <form method="post" th:action="@{/problems/update/{id}/difficulty(id=${problem.problemID})}">
+                        <input type="hidden" name="problemDifficulty" value="1" />
+                        <button type="submit" class="difficulty-next-btn easy">
+                            <i class="bi bi-check"></i>
+                            <span>Easy</span>
+                        </button>
+                    </form>
 
-                    <a class="difficulty-next-btn medium" th:href="@{/problems}">
-                        <i class="bi bi-arrow-right"></i>
-                        <span>Medium</span>
-                    </a>
+                    <form method="post" th:action="@{/problems/update/{id}/difficulty(id=${problem.problemID})}">
+                        <input type="hidden" name="problemDifficulty" value="2" />
+                        <button type="submit" class="difficulty-next-btn medium">
+                            <i class="bi bi-check"></i>
+                            <span>Medium</span>
+                        </button>
+                    </form>
 
-                    <a class="difficulty-next-btn hard" th:href="@{/problems}">
-                        <i class="bi bi-arrow-right"></i>
-                        <span>Hard</span>
-                    </a>
+                    <form method="post" th:action="@{/problems/update/{id}/difficulty(id=${problem.problemID})}">
+                        <input type="hidden" name="problemDifficulty" value="3" />
+                        <button type="submit" class="difficulty-next-btn hard">
+                            <i class="bi bi-check"></i>
+                            <span>Hard</span>
+                        </button>
+                    </form>
                 </div>
             </div>
+
         </section>
 
         <section id="editor-panel">

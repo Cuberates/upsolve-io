@@ -457,3 +457,23 @@ html, body {
     #next-problem-group { width: 100%; }
     #next-problem-label { width: 100%; }
 }
+
+#attempt-buttons .correct-btn {
+    background-color: rgba(16,185,129,0.12); 
+    color: #6ee7b7;
+    border: 1px solid rgba(16,185,129,0.25);
+}
+
+#attempt-buttons .correct-btn:hover {
+    background-color: #157347;
+}
+
+#attempt-buttons .incorrect-btn {
+    background-color: rgba(239,68,68,0.12); 
+    color: #fca5a5;
+    border: 1px solid rgba(239,68,68,0.25);
+}
+
+#attempt-buttons .incorrect-btn:hover {
+    background-color: #b02a37;
+}
