@@ -228,20 +228,16 @@ public class ProblemController {
     return "redirect:/problems/view/" + problemID;
   }
 
-  @GetMapping("/problems/{problemID}/time")
+  @PostMapping("/problems/{problemID}/time")
   @ResponseBody
   public void recordStudyTime(@PathVariable int problemID, @RequestParam long duration, HttpServletRequest request) {
     User user = (User) request.getSession().getAttribute("session_user");
-    if (user == null) return;
+    if (user == null || duration < 1000) return;
 
-    StudySession session = new StudySession(
-        user.getUserID(),
-        problemID,
-        duration
-    );
+    StudySession session = new StudySession(user.getUserID(), problemID, duration);
 
     studySessionRepository.save(session);
-  }
+  } 
 
 
 }

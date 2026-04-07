@@ -184,56 +184,80 @@
 <script th:src="@{/js/account-dropdown.js}" src="/js/account-dropdown.js"></script>
 <input type="hidden" id="problemID" th:value="${problem.problemID}" />
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "XXXX",
-    appId: "XXXX",
-    measurementId: "G-XXXX"
-  };
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "XXXX",
+        appId: "XXXX",
+        measurementId: "G-XXXX"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
 
-  const problemID = document.getElementById("problemID").value;
+    const problemID = document.getElementById("problemID").value;
 
-  let isActive = true;
-  let totalActiveTime = 0;
-  let lastStart = Date.now();
+    let isActive = true;
+    let lastStart = Date.now();
+    let accumulatedTime = 0; 
+    let sentOnUnload = false;
 
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      totalActiveTime += Date.now() - lastStart;
-      isActive = false;
-    } else {
-      lastStart = Date.now();
-      isActive = true;
-    }
-  });
-
-  function sendStudyTime() {
-    if (isActive) {
-      totalActiveTime += Date.now() - lastStart;
-    }
-
-    logEvent(analytics, "study_time", {
-      problem_id: problemID,
-      duration_ms: totalActiveTime
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            if (isActive) {
+            accumulatedTime += Date.now() - lastStart;
+            isActive = false;
+            }
+        } else {
+            lastStart = Date.now();
+            isActive = true;
+        }
     });
 
-    fetch("/problems/" + problemID + "/time?duration=" + totalActiveTime, {
-    method: "GET",
-    credentials: "same-origin"
-    });
-  }
+    setInterval(() => {
+        if (!isActive) return;
 
-  document.getElementById("btn-back").addEventListener("click", sendStudyTime);
-  window.addEventListener("beforeunload", sendStudyTime);
+        const now = Date.now();
+        accumulatedTime += now - lastStart;
+        lastStart = now;
+
+        if (accumulatedTime < 3000) return;
+
+        sendTimeToServer(accumulatedTime);
+        accumulatedTime = 0;
+
+    }, 15000); 
+
+
+    function sendTimeToServer(duration) {
+        logEvent(analytics, "study_time", {
+            problem_id: problemID,
+            duration_ms: duration
+        });
+
+        navigator.sendBeacon( "/problems/" + problemID + "/time", new URLSearchParams({ duration: duration }));
+    }
+
+    function sendFinalTime() {
+        if (sentOnUnload) return;
+        sentOnUnload = true;
+
+        if (isActive) {
+            accumulatedTime += Date.now() - lastStart;
+        }
+
+        if (accumulatedTime > 0) {
+            sendTimeToServer(accumulatedTime);
+        }
+    }
+
+    window.addEventListener("beforeunload", sendFinalTime);
+    document.getElementById("btn-back").addEventListener("click", sendFinalTime);
 </script>
 </body>
 </html>
