@@ -94,9 +94,12 @@ public class ProblemController {
     int problemDifficulty = Integer.parseInt(problemInfo.get("problemDifficulty"));
 
     if (problemRepository.findByProblemName(problemName).size() > 0) {
-      viewModel.addAttribute("user", user);
-      viewModel.addAttribute("errorMessage", "Problem already exists!");
-      return "cards/create";
+      Problem existingProblem = problemRepository.findByProblemName(problemName).get(0);
+      if (existingProblem.getUserID() != null && user.getUserID().equals(existingProblem.getUserID())) {
+        viewModel.addAttribute("problem", existingProblem);
+        viewModel.addAttribute("errorMessage", "Problem already exists! You can update the existing problem.");
+        return "cards/update";
+      }
     }
     Problem newProblem = new Problem(problemName, problemDescription, problemSolution, problemDifficulty, problemType);
     newProblem.setUserID(user.getUserID());
