@@ -141,7 +141,7 @@ public class ProblemControllerTest {
 
         Problem problem = new Problem();
         problem.setProblemID(1);
-        problem.setUserID(1); // IMPORTANT
+        problem.setUserID(1); 
 
         Mockito.when(problemRepository.findByProblemID(1))
            .thenReturn(Arrays.asList(problem));
