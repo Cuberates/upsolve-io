@@ -569,3 +569,11 @@ body {
     color: rgba(255,255,255,0.5);
     border: 1px solid rgba(255,255,255,0.08); 
 }
+
+.badge.bg-info {
+    --badge-color: 0,153,242;
+
+    background-color: rgba(var(--badge-color), 0.1) !important;
+    color: rgba(var(--badge-color), 0.9);
+    border: 1px solid rgba(var(--badge-color), 0.25);
+}

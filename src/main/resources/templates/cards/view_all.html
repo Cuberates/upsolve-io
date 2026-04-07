@@ -111,7 +111,7 @@
                                             th:text="${problem.accuracy == -1} ? 'N/A' : ${#numbers.formatDecimal(problem.accuracy, 1, 2)} + '%'">
                                             N/A
                                         </span>
-                                        <span class="badge bg-info text-dark">
+                                        <span class="badge bg-info">
                                             ⏱ 
                                             <span th:text="
                                                 ${problem.totalTimeMillis < 60000} ? 
