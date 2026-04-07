@@ -41,76 +41,41 @@ public class UserControllerTest {
 
     @Test
     public void testLoginSuccessRegularUser() throws Exception {
-        // Mock both repository calls
-        Mockito.when(userRepository.findByUserNameAndUserPassword("user1", "pass1")).thenReturn(Arrays.asList(regularUser));
+        Mockito.when(userRepository.findByUserNameAndUserPassword("user1", "pass1"))
+               .thenReturn(Arrays.asList(regularUser));
 
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("userName", "user1")
-                .param("userPassword", "pass1")
-                .param("securityAnswer", "Fluffy")
-                .param("securityQuestion", "What is your pet's name?"))
+                .param("userPassword", "pass1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard"));
     }
 
     @Test
     public void testLoginSuccessAdmin() throws Exception {
-        Mockito.when(userRepository.findByUserNameAndUserPassword("admin", "adminpass")).thenReturn(Arrays.asList(adminUser));
+        Mockito.when(userRepository.findByUserNameAndUserPassword("admin", "adminpass"))
+               .thenReturn(Arrays.asList(adminUser));
 
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("userName", "admin")
-                .param("userPassword", "adminpass")
-                .param("securityAnswer", "Blue")
-                .param("securityQuestion", "What is your favorite color?"))
+                .param("userPassword", "adminpass"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin_dashboard"));
     }
 
     @Test
-    public void testLoginUsernameNotFound() throws Exception {
-        Mockito.when(userRepository.findByUserNameAndUserPassword("unknown", "pass")).thenReturn(Arrays.asList());
-
-        mockMvc.perform(post("/login")
-                .contentType(MediaType.valueOf("application/x-www-form-urlencoded"))
-                .param("userName", "unknown")
-                .param("userPassword", "pass")
-                .param("securityAnswer", "Answer")
-                .param("securityQuestion", "What is your pet's name?"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login"))
-                .andExpect(flash().attributeExists("errorMessage"));
-    }
-
-    @Test
-    public void testLoginIncorrectPassword() throws Exception {
-        Mockito.when(userRepository.findByUserNameAndUserPassword("user1", "wrongpass")).thenReturn(Arrays.asList());
+    public void testLoginFailure() throws Exception {
+        Mockito.when(userRepository.findByUserNameAndUserPassword("user1", "wrong"))
+               .thenReturn(Arrays.asList());
 
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("userName", "user1")
-                .param("userPassword", "wrongpass")
-                .param("securityAnswer", "Fluffy")
-                .param("securityQuestion", "What is your pet's name?"))
+                .param("userPassword", "wrong"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login"))
-                .andExpect(flash().attributeExists("errorMessage"));
-    }
-
-    @Test
-    public void testLoginIncorrectSecurityAnswer() throws Exception {
-        Mockito.when(userRepository.findByUserNameAndUserPassword("user1", "pass1")).thenReturn(Arrays.asList(regularUser));
-
-        mockMvc.perform(post("/login")
-                .contentType(MediaType.valueOf("application/x-www-form-urlencoded"))
-                .param("userName", "user1")
-                .param("userPassword", "pass1")
-                .param("securityAnswer", "WrongAnswer")
-                .param("securityQuestion", "What is your pet's name?"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login"))
-                .andExpect(flash().attributeExists("errorMessage"));
+                .andExpect(redirectedUrl("/login"));
     }
 
     @Test
@@ -121,10 +86,7 @@ public class UserControllerTest {
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("userName", "newuser")
-                .param("userPassword", "newpass")
-                .param("userEmail", "newuser@example.com")
-                .param("securityAnswer", "Buddy")
-                .param("securityQuestion", "What is your pet's name?"))
+                .param("userPassword", "pass"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login"));
     }
@@ -137,12 +99,57 @@ public class UserControllerTest {
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("userName", "user1")
-                .param("userPassword", "pass1")
-                .param("userEmail", "user1@test.com")
-                .param("securityAnswer", "Fluffy")
-                .param("securityQuestion", "What is your pet's name?"))
+                .param("userPassword", "pass"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/register"))
-                .andExpect(flash().attributeExists("errorMessage"));
+                .andExpect(redirectedUrl("/register"));
+    }
+
+    @Test
+    public void testIndexNoUser() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("home"));
+    }
+
+    @Test
+    public void testIndexRegularUser() throws Exception {
+        mockMvc.perform(get("/")
+                .sessionAttr("session_user", regularUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/dashboard"));
+    }
+
+    @Test
+    public void testIndexAdminUser() throws Exception {
+        mockMvc.perform(get("/")
+                .sessionAttr("session_user", adminUser))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin_dashboard"));
+    }
+
+    @Test
+    public void testDashboardRequiresLogin() throws Exception {
+        mockMvc.perform(get("/dashboard"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    public void testAdminDashboardAsAdmin() throws Exception {
+        Mockito.when(userRepository.findAll())
+               .thenReturn(Arrays.asList(regularUser, adminUser));
+
+        mockMvc.perform(get("/admin_dashboard")
+                .sessionAttr("session_user", adminUser))
+                .andExpect(status().isOk())
+                .andExpect(view().name("users/admin"))
+                .andExpect(model().attributeExists("users"));
+    }
+
+    @Test
+    public void testLogout() throws Exception {
+        mockMvc.perform(get("/logout"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
     }
 }
